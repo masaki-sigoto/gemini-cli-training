@@ -1,0 +1,5475 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gemini CLI 実務活用講座 - 統合版</title>
+  <style>
+/* ============================================
+   Gemini CLI 実務活用講座 - 共通スタイル
+   ============================================ */
+
+/* --- Reset & Base --- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+  font-size: 16px;
+  line-height: 1.8;
+  color: #333;
+  background-color: #f6f8fa;
+}
+
+/* --- Header --- */
+.header {
+  background: linear-gradient(135deg, #2563eb, #059669);
+  color: #fff;
+  text-align: center;
+  padding: 48px 24px 40px;
+}
+
+.header h1 {
+  font-size: 2.2em;
+  font-weight: 700;
+  margin-bottom: 12px;
+  letter-spacing: 0.02em;
+}
+
+.header .subtitle {
+  font-size: 1.1em;
+  opacity: 0.92;
+  max-width: 720px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.header .badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.22);
+  border-radius: 20px;
+  padding: 4px 16px;
+  font-size: 0.85em;
+  margin-top: 12px;
+}
+
+/* Mac header variant */
+.header--mac {
+  background: linear-gradient(135deg, #334155, #475569);
+}
+
+/* Windows header variant */
+.header--windows {
+  background: linear-gradient(135deg, #1e40af, #3b82f6);
+}
+
+/* --- Container --- */
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 32px 20px 60px;
+}
+
+/* --- Section Card --- */
+.section {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  padding: 32px 28px;
+  margin-bottom: 28px;
+}
+
+.section h2 {
+  font-size: 1.5em;
+  color: #2563eb;
+  border-bottom: 3px solid #2563eb;
+  padding-bottom: 8px;
+  margin-bottom: 20px;
+}
+
+.section h3 {
+  font-size: 1.2em;
+  color: #1e40af;
+  margin-top: 24px;
+  margin-bottom: 12px;
+}
+
+.section h4 {
+  font-size: 1.05em;
+  color: #374151;
+  margin-top: 16px;
+  margin-bottom: 8px;
+}
+
+/* --- Step Block --- */
+.step {
+  border-left: 4px solid #2563eb;
+  padding: 16px 20px;
+  margin: 16px 0;
+  background: #f0f7ff;
+  border-radius: 0 8px 8px 0;
+}
+
+.step-number {
+  display: inline-block;
+  background: #2563eb;
+  color: #fff;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 28px;
+  font-size: 0.85em;
+  font-weight: 700;
+  margin-right: 8px;
+}
+
+/* --- Code Block --- */
+.code-block {
+  position: relative;
+  background: #1e1e2e;
+  color: #cdd6f4;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin: 14px 0;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 0.92em;
+  line-height: 1.7;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.code-block .prompt::before {
+  content: '$ ';
+  color: #a6e3a1;
+}
+
+.code-block .ps-prompt::before {
+  content: 'PS> ';
+  color: #89b4fa;
+}
+
+.code-block .output {
+  color: #9399b2;
+}
+
+.copy-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(255,255,255,0.12);
+  color: #cdd6f4;
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 5px;
+  padding: 4px 12px;
+  font-size: 0.78em;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.copy-btn:hover {
+  background: rgba(255,255,255,0.25);
+}
+
+.copy-btn.copied {
+  background: #059669;
+  color: #fff;
+  border-color: #059669;
+}
+
+/* --- Prompt Example Block --- */
+.prompt-example {
+  position: relative;
+  background: #fefce8;
+  border: 1px solid #fbbf24;
+  border-left: 4px solid #f59e0b;
+  border-radius: 0 8px 8px 0;
+  padding: 16px 20px;
+  margin: 14px 0;
+  font-size: 0.95em;
+  line-height: 1.7;
+}
+
+.prompt-example .label {
+  display: inline-block;
+  background: #f59e0b;
+  color: #fff;
+  font-size: 0.75em;
+  font-weight: 700;
+  padding: 2px 10px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+/* --- Alert Boxes --- */
+.alert {
+  padding: 16px 20px;
+  border-radius: 8px;
+  margin: 16px 0;
+  font-size: 0.95em;
+}
+
+.alert-info {
+  background: #eff6ff;
+  border-left: 4px solid #3b82f6;
+  color: #1e40af;
+}
+
+.alert-warning {
+  background: #fef3c7;
+  border-left: 4px solid #f59e0b;
+  color: #92400e;
+}
+
+.alert-danger {
+  background: #fef2f2;
+  border-left: 4px solid #ef4444;
+  color: #991b1b;
+}
+
+.alert-success {
+  background: #f0fdf4;
+  border-left: 4px solid #22c55e;
+  color: #166534;
+}
+
+.alert-title {
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+/* --- OS Selector Cards --- */
+.os-selector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin: 32px 0;
+}
+
+.os-card {
+  display: block;
+  text-decoration: none;
+  color: #333;
+  background: #fff;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 32px 24px;
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+
+.os-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+.os-card--mac:hover { border-color: #475569; }
+.os-card--windows:hover { border-color: #3b82f6; }
+
+.os-card .os-icon {
+  font-size: 3em;
+  margin-bottom: 12px;
+}
+
+.os-card .os-name {
+  font-size: 1.3em;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.os-card .os-desc {
+  font-size: 0.9em;
+  color: #6b7280;
+}
+
+/* --- OS Badge --- */
+.os-badge {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 6px;
+  font-size: 0.82em;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.os-badge--mac {
+  background: #334155;
+  color: #fff;
+}
+
+.os-badge--windows {
+  background: #2563eb;
+  color: #fff;
+}
+
+/* --- Tab-like OS switcher inline --- */
+.os-tabs {
+  display: flex;
+  gap: 0;
+  margin: 16px 0 0;
+}
+
+.os-tab {
+  padding: 8px 20px;
+  border: 1px solid #d1d5db;
+  background: #f9fafb;
+  cursor: pointer;
+  font-size: 0.9em;
+  font-weight: 600;
+  color: #6b7280;
+  transition: background 0.15s;
+}
+
+.os-tab:first-child { border-radius: 8px 0 0 0; }
+.os-tab:last-child { border-radius: 0 8px 0 0; border-left: none; }
+
+.os-tab.active {
+  background: #fff;
+  color: #2563eb;
+  border-bottom-color: #fff;
+}
+
+.os-content {
+  border: 1px solid #d1d5db;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  padding: 20px;
+  background: #fff;
+}
+
+.os-pane { display: none; }
+.os-pane.active { display: block; }
+
+/* --- Navigation Cards --- */
+.nav-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+
+.nav-card {
+  display: block;
+  text-decoration: none;
+  color: #333;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 20px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.nav-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+}
+
+.nav-card .nav-icon {
+  font-size: 1.8em;
+  margin-bottom: 8px;
+}
+
+.nav-card .nav-title {
+  font-size: 1.05em;
+  font-weight: 700;
+  color: #2563eb;
+  margin-bottom: 4px;
+}
+
+.nav-card .nav-desc {
+  font-size: 0.88em;
+  color: #6b7280;
+}
+
+/* --- Checklist --- */
+.checklist {
+  list-style: none;
+  padding: 0;
+}
+
+.checklist li {
+  padding: 10px 0 10px 32px;
+  position: relative;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.checklist li::before {
+  content: '☐';
+  position: absolute;
+  left: 4px;
+  color: #9ca3af;
+  font-size: 1.1em;
+}
+
+/* --- Table --- */
+.table-wrap {
+  overflow-x: auto;
+  margin: 16px 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92em;
+}
+
+th {
+  background: #2563eb;
+  color: #fff;
+  padding: 10px 14px;
+  text-align: left;
+  font-weight: 600;
+}
+
+td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+tr:nth-child(even) td {
+  background: #f9fafb;
+}
+
+/* --- Breadcrumb --- */
+.breadcrumb {
+  padding: 12px 0;
+  font-size: 0.85em;
+  color: #6b7280;
+}
+
+.breadcrumb a {
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+/* --- Footer --- */
+.footer {
+  text-align: center;
+  padding: 32px 20px;
+  color: #9ca3af;
+  font-size: 0.85em;
+  border-top: 1px solid #e5e7eb;
+  margin-top: 40px;
+}
+
+/* --- Pagination / Prev-Next --- */
+.page-nav {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 32px;
+  gap: 16px;
+}
+
+.page-nav a {
+  display: block;
+  flex: 1;
+  text-decoration: none;
+  color: #2563eb;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  padding: 14px 18px;
+  font-weight: 600;
+  transition: background 0.15s;
+}
+
+.page-nav a:hover {
+  background: #dbeafe;
+}
+
+.page-nav .next {
+  text-align: right;
+}
+
+/* --- Utility --- */
+.text-center { text-align: center; }
+.text-sm { font-size: 0.88em; }
+.mt-2 { margin-top: 16px; }
+.mt-3 { margin-top: 24px; }
+.mb-2 { margin-bottom: 16px; }
+
+/* --- Responsive --- */
+@media (max-width: 640px) {
+  .header h1 { font-size: 1.5em; }
+  .header .subtitle { font-size: 0.95em; }
+  .container { padding: 16px 12px 40px; }
+  .section { padding: 20px 16px; }
+  .os-selector { grid-template-columns: 1fr; }
+  .nav-grid { grid-template-columns: 1fr; }
+  .page-nav { flex-direction: column; }
+}
+
+
+.sidebar { position: fixed; top: 0; left: 0; width: 280px; height: 100vh; background: #1e1e2e; color: #cdd6f4; overflow-y: auto; padding: 20px 0; z-index: 1000; transition: transform 0.3s; }
+.sidebar-title { font-size: 1.1em; font-weight: 700; color: #fff; padding: 0 20px 16px; border-bottom: 1px solid #45475a; margin-bottom: 12px; }
+.sidebar-group { margin-bottom: 4px; }
+.sidebar-group-title { font-size: 0.75em; text-transform: uppercase; letter-spacing: 0.1em; color: #9399b2; padding: 8px 20px 4px; }
+.sidebar a { display: block; padding: 5px 20px 5px 28px; color: #bac2de; text-decoration: none; font-size: 0.85em; transition: background 0.15s; border-left: 3px solid transparent; }
+.sidebar a:hover { background: rgba(255,255,255,0.05); color: #fff; }
+.sidebar a.active { background: rgba(37,99,235,0.15); color: #89b4fa; border-left-color: #89b4fa; }
+.main-content { margin-left: 280px; }
+.section-banner { background: linear-gradient(135deg, #2563eb, #059669); color: #fff; padding: 28px 24px; text-align: center; }
+.section-banner.mac { background: linear-gradient(135deg, #334155, #475569); }
+.section-banner.win { background: linear-gradient(135deg, #1e40af, #3b82f6); }
+.section-banner h2 { font-size: 1.6em; color: #fff; border: none; margin: 0; padding: 0; }
+.section-banner p { opacity: 0.9; margin-top: 6px; font-size: 0.95em; }
+.back-to-top { position: fixed; bottom: 24px; right: 24px; background: #2563eb; color: #fff; border: none; border-radius: 50%; width: 48px; height: 48px; font-size: 1.5em; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 999; display: none; }
+.back-to-top.visible { display: block; }
+.mobile-toggle { display: none; position: fixed; top: 12px; left: 12px; z-index: 1001; background: #1e1e2e; color: #fff; border: none; border-radius: 8px; padding: 8px 12px; font-size: 1.2em; cursor: pointer; }
+@media (max-width: 900px) { .sidebar { transform: translateX(-100%); } .sidebar.open { transform: translateX(0); } .main-content { margin-left: 0; } .mobile-toggle { display: block; } }
+.page-section { border-bottom: 2px solid #e5e7eb; }
+
+  </style>
+</head>
+<body>
+  <button class="mobile-toggle">☰</button>
+  <nav class="sidebar">
+    <div class="sidebar-title">📖 講座ナビゲーション</div>
+    <div class="sidebar-group">
+      <div class="sidebar-group-title">講座概要</div>
+      <a href="#section-index">講座トップ</a>
+    </div>
+    <div class="sidebar-group">
+      <div class="sidebar-group-title">事前準備</div>
+      <a href="#section-before">受講前のご案内</a>
+      <a href="#section-choose-os">OS選択</a>
+    </div>
+    <div class="sidebar-group">
+      <div class="sidebar-group-title">Mac セットアップ</div>
+      <a href="#section-setup-mac">Mac セットアップ</a>
+      <a href="#section-checklist-mac">Mac チェックリスト</a>
+      <a href="#section-trouble-mac">Mac トラブル</a>
+    </div>
+    <div class="sidebar-group">
+      <div class="sidebar-group-title">Windows セットアップ</div>
+      <a href="#section-setup-win">Win セットアップ</a>
+      <a href="#section-checklist-win">Win チェックリスト</a>
+      <a href="#section-trouble-win">Win トラブル</a>
+    </div>
+    <div class="sidebar-group">
+      <div class="sidebar-group-title">総合ガイド</div>
+      <a href="#section-trouble-general">トラブル総合</a>
+    </div>
+    <div class="sidebar-group">
+      <div class="sidebar-group-title">レッスン</div>
+      <a href="#section-lesson01">第1部: CLI起動</a>
+      <a href="#section-lesson02">第2部: フォルダ整理</a>
+      <a href="#section-lesson03">第3部: Office作成</a>
+      <a href="#section-lesson04">第4部: データ分析</a>
+      <a href="#section-lesson05">第5部: PDF・QR</a>
+      <a href="#section-lesson06">第6部: まとめ</a>
+    </div>
+  </nav>
+
+  <div class="main-content">
+
+    <div class="page-section" id="section-index">
+      <div class="section-banner">
+        <h2>Gemini CLI 実務活用講座</h2>
+        <p>ターミナル / PowerShell からAIを起動し、実務を自動化する3時間講座</p>
+      </div>
+      <div class="container">
+
+
+    <!-- イントロダクション -->
+    <div class="section">
+      <h2>この講座について</h2>
+      <p>本講座は、<strong>AI（Gemini CLI）を実務で活かすための実践的なハンズオン研修</strong>です。ターミナルやPowerShellからAIに指示を出し、日々の業務で発生するファイル整理・資料作成・データ集計を自動化する一連の流れを体験します。</p>
+
+      <div class="alert alert-warning" style="margin-top:20px;">
+        <div class="alert-title">⏱️ セットアップ時間について</div>
+        <p>初めて受講される方は、Node.js や Gemini CLI のインストールに <strong>10分〜1時間程度</strong>かかる場合があります。会社PCをお使いの方は特に注意が必要です。<strong>前日までに事前準備を完了</strong>されることを強くお勧めします。</p>
+      </div>
+
+      <h3>受講にあたって知っておいてほしいこと</h3>
+      <ul style="margin-left:20px; line-height:2.2;">
+        <li>本講座はAI活用の<strong>実践的な流れをつかむ</strong>ことを目的としています。コマンドをすべて暗記する必要はありません</li>
+        <li>演習ではすべて<strong>練習用サンプルデータ</strong>を使用しますので、実務データが外部に漏れる心配はありません</li>
+        <li>会社支給PCをご利用の方は、インストール制限がある場合があります。<strong>情報システム部門への事前確認</strong>をお願いします</li>
+        <li>エラーが出ても慌てないでください。講師・サポートスタッフがリアルタイムで対応します</li>
+        <li>質問はいつでも歓迎です。チャットへの書き込みや音声での質問が可能です</li>
+      </ul>
+    </div>
+
+    <!-- ナビゲーション -->
+    <div class="section">
+      <h2>コンテンツ一覧</h2>
+
+      <h3>事前準備セクション</h3>
+      <div class="nav-grid">
+        <a href="#section-before" class="nav-card">
+          <div class="nav-icon">📋</div>
+          <div class="nav-title">受講前のご案内</div>
+          <div class="nav-desc">PC選定・Googleアカウント・ターミナルの確認など、受講前に済ませておくべき準備チェックリスト</div>
+        </a>
+        <a href="#section-choose-os" class="nav-card">
+          <div class="nav-icon">💻</div>
+          <div class="nav-title">OS別セットアップ</div>
+          <div class="nav-desc">MacとWindowsに分かれたセットアップ手順へのナビゲーション。Node.js・Gemini CLIのインストールを含む</div>
+        </a>
+      </div>
+
+      <h3 style="margin-top:24px;">レッスンセクション</h3>
+      <div class="nav-grid">
+        <a href="#section-lesson01" class="nav-card">
+          <div class="nav-icon">🚀</div>
+          <div class="nav-title">第1部: CLI起動とログイン</div>
+          <div class="nav-desc">ターミナル/PowerShellの起動から、Gemini CLIのインストール・Googleアカウントでのログインまで</div>
+        </a>
+        <a href="#section-lesson02" class="nav-card">
+          <div class="nav-icon">📁</div>
+          <div class="nav-title">第2部: フォルダ整理の自動化</div>
+          <div class="nav-desc">散らかったフォルダをGemini CLIに整理させる。ファイル分類・リネーム・移動を自動化する実践演習</div>
+        </a>
+        <a href="#section-lesson03" class="nav-card">
+          <div class="nav-icon">📊</div>
+          <div class="nav-title">第3部: Excel/Word/PPT作成</div>
+          <div class="nav-desc">AIへの指示でExcelシート・Wordドキュメント・PowerPointプレゼンテーションを自動生成する</div>
+        </a>
+        <a href="#section-lesson04" class="nav-card">
+          <div class="nav-icon">📈</div>
+          <div class="nav-title">第4部: データ分析・予測</div>
+          <div class="nav-desc">CSVデータの読み込み・集計・グラフ化・簡易予測をGemini CLIとPythonで実践する</div>
+        </a>
+        <a href="#section-lesson05" class="nav-card">
+          <div class="nav-icon">📄</div>
+          <div class="nav-title">第5部: PDF・QRコード出力</div>
+          <div class="nav-desc">作成した資料のPDF変換、QRコードの生成と画像保存。成果物を実務で使える形に仕上げる</div>
+        </a>
+        <a href="#section-lesson06" class="nav-card">
+          <div class="nav-icon">🎯</div>
+          <div class="nav-title">第6部: まとめ・次の一歩</div>
+          <div class="nav-desc">本日の振り返り・学んだコマンドの整理・実務への応用方法・継続学習のためのリソース紹介</div>
+        </a>
+      </div>
+
+      <h3 style="margin-top:24px;">補助資料セクション</h3>
+      <div class="nav-grid">
+        <a href="#section-trouble-general" class="nav-card">
+          <div class="nav-icon">🔧</div>
+          <div class="nav-title">トラブル対処ガイド</div>
+          <div class="nav-desc">ターミナルが開けない・コマンドが動かない・ログインできないなど、よくある問題と解決策をまとめたガイド</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- タイムテーブル -->
+    <div class="section">
+      <h2>講座タイムテーブル（目安）</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>時間</th>
+              <th>内容</th>
+              <th>担当</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>0:00 〜 0:10</td>
+              <td>オープニング・自己紹介・本日の流れ説明</td>
+              <td>講師</td>
+            </tr>
+            <tr>
+              <td>0:10 〜 0:40</td>
+              <td><strong>第1部</strong>：ターミナル起動・Gemini CLI ログイン・動作確認</td>
+              <td>全員ハンズオン</td>
+            </tr>
+            <tr>
+              <td>0:40 〜 1:10</td>
+              <td><strong>第2部</strong>：サンプルフォルダをAIで整理・ファイルリネーム自動化</td>
+              <td>全員ハンズオン</td>
+            </tr>
+            <tr>
+              <td>1:10 〜 1:30</td>
+              <td>休憩・質問タイム</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td>1:30 〜 2:00</td>
+              <td><strong>第3部</strong>：Excel・Word・PowerPoint の自動生成</td>
+              <td>全員ハンズオン</td>
+            </tr>
+            <tr>
+              <td>2:00 〜 2:25</td>
+              <td><strong>第4部</strong>：CSVデータの集計・グラフ作成・簡易予測</td>
+              <td>全員ハンズオン</td>
+            </tr>
+            <tr>
+              <td>2:25 〜 2:45</td>
+              <td><strong>第5部</strong>：PDF変換・QRコード生成と保存</td>
+              <td>全員ハンズオン</td>
+            </tr>
+            <tr>
+              <td>2:45 〜 3:00</td>
+              <td><strong>第6部</strong>：まとめ・次の一歩・Q&amp;A</td>
+              <td>講師・全員</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 対象者 -->
+    <div class="section">
+      <h2>受講対象者</h2>
+      <div class="nav-grid">
+        <div style="background:#f0fdf4; border-radius:8px; padding:20px;">
+          <div style="font-size:1.8em; margin-bottom:8px;">✅</div>
+          <strong>このような方に最適です</strong>
+          <ul style="margin-top:12px; margin-left:20px; line-height:2.2;">
+            <li>AIツールに興味があるが、ChatGPTの画面操作しか知らない</li>
+            <li>Excelやフォルダ整理に毎日時間を取られている</li>
+            <li>プログラミング経験はほぼないが、自動化に挑戦したい</li>
+            <li>コマンドラインを初めて使う、または不安がある</li>
+            <li>実務で使えるAI活用のきっかけが欲しい</li>
+          </ul>
+        </div>
+        <div style="background:#fef3c7; border-radius:8px; padding:20px;">
+          <div style="font-size:1.8em; margin-bottom:8px;">⚠️</div>
+          <strong>以下の方は事前確認が必要です</strong>
+          <ul style="margin-top:12px; margin-left:20px; line-height:2.2;">
+            <li>会社支給PCを使用予定（インストール制限の可能性）</li>
+            <li>セキュリティソフトが厳しく設定されているPC</li>
+            <li>インターネット接続が不安定な環境</li>
+            <li>Node.js のインストールが未完了の方</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 学べること -->
+    <div class="section">
+      <h2>この講座で身につくこと</h2>
+      <div class="nav-grid">
+        <div style="padding:16px; border-left:4px solid #2563eb; background:#f0f7ff; border-radius:0 8px 8px 0;">
+          <strong>コマンドライン操作の基礎</strong>
+          <p style="margin-top:8px; font-size:0.9em; color:#555;">ターミナル（Mac）またはPowerShell（Windows）の基本操作。フォルダの移動、ファイルの確認など、AIを使うための前提知識を習得</p>
+        </div>
+        <div style="padding:16px; border-left:4px solid #059669; background:#f0fdf4; border-radius:0 8px 8px 0;">
+          <strong>Gemini CLIの起動・対話方法</strong>
+          <p style="margin-top:8px; font-size:0.9em; color:#555;">GoogleアカウントでのログインからAIへの指示の出し方まで。プロンプトの書き方と、より良い結果を得るためのコツ</p>
+        </div>
+        <div style="padding:16px; border-left:4px solid #7c3aed; background:#f5f3ff; border-radius:0 8px 8px 0;">
+          <strong>ファイル整理の自動化</strong>
+          <p style="margin-top:8px; font-size:0.9em; color:#555;">散らかったフォルダの分類・リネーム・移動をAIに任せる方法。毎日の業務時間を削減する実践的なテクニック</p>
+        </div>
+        <div style="padding:16px; border-left:4px solid #dc2626; background:#fef2f2; border-radius:0 8px 8px 0;">
+          <strong>Office資料の自動生成</strong>
+          <p style="margin-top:8px; font-size:0.9em; color:#555;">Excel・Word・PowerPointファイルをコマンド一発で生成。報告書・提案書・集計表の作成時間を大幅に短縮</p>
+        </div>
+        <div style="padding:16px; border-left:4px solid #ea580c; background:#fff7ed; border-radius:0 8px 8px 0;">
+          <strong>データ分析・グラフ・予測</strong>
+          <p style="margin-top:8px; font-size:0.9em; color:#555;">CSVデータの集計・グラフ化・簡易予測をPythonを使って実行。AIがコードを書いてくれるので、プログラミング経験不要</p>
+        </div>
+        <div style="padding:16px; border-left:4px solid #0891b2; background:#ecfeff; border-radius:0 8px 8px 0;">
+          <strong>PDF変換・QRコード生成</strong>
+          <p style="margin-top:8px; font-size:0.9em; color:#555;">作成した資料をPDFに変換する方法と、URLやテキストからQRコードを生成して画像ファイルに保存する方法を習得</p>
+        </div>
+      </div>
+    </div>
+
+
+  <!-- Footer -->
+      </div>
+    </div>
+
+    <div class="page-section" id="section-before">
+      <div class="section-banner">
+        <h2>受講前のご案内</h2>
+        <p>講座当日をスムーズにスタートするための事前確認</p>
+      </div>
+      <div class="container">
+
+
+    <!-- パンくずリスト -->
+    
+
+    <!-- セットアップ時間の警告 -->
+    <div class="alert alert-warning">
+      <div class="alert-title">⏱️ セットアップには時間がかかります</div>
+      <p>Gemini CLI を使えるようにするまでの準備は、環境によって <strong>10分〜1時間程度</strong> かかります。当日ぎりぎりではなく、<strong>前日までに完了</strong>しておくことを強くお勧めします。特に会社PCをご利用の方は、早めにご確認ください。</p>
+    </div>
+
+    <!-- 事前に済ませておくべきこと -->
+    <div class="section">
+      <h2>事前に済ませておいてほしいこと（チェックリスト）</h2>
+      <p>受講前日までに、以下の項目をすべて確認してください。不安な点があれば事前にご連絡ください。</p>
+
+      <h3>PC・環境</h3>
+      <ul class="checklist">
+        <li>
+          <strong>使用するPCを決めておく</strong><br>
+          <span class="text-sm">自宅PC・個人PC・会社PCのどれを使うか決めてください。会社PCの場合は次の項目も必ず確認してください。</span>
+        </li>
+        <li>
+          <strong>会社PCの場合: ソフトウェアのインストール制限を確認する</strong><br>
+          <span class="text-sm">情報システム部門（IT部門）に「Node.js と npm をインストールしてよいか」を事前に確認してください。制限がある場合は個人PCでの参加をご検討ください。</span>
+        </li>
+        <li>
+          <strong>PCの管理者権限（Administratorアカウント）を確認する</strong><br>
+          <span class="text-sm">ソフトウェアのインストールに管理者権限が必要です。Windowsの場合は「設定 → アカウント」で確認できます。Macの場合は「システム設定 → ユーザとグループ」で確認してください。</span>
+        </li>
+        <li>
+          <strong>安定したインターネット回線に接続できる状態にする</strong><br>
+          <span class="text-sm">ダウンロードや AI との通信が発生します。できれば有線LAN、または安定したWi-Fiを確保してください。</span>
+        </li>
+        <li>
+          <strong>充電器を用意する（またはバッテリー残量を確認）</strong><br>
+          <span class="text-sm">3時間の講座中、充電が切れると復旧に時間がかかります。充電器を接続した状態でご参加ください。</span>
+        </li>
+      </ul>
+
+      <h3>Googleアカウント</h3>
+      <ul class="checklist">
+        <li>
+          <strong>Googleアカウントを持っていることを確認する</strong><br>
+          <span class="text-sm">Gemini CLI のログインにはGoogleアカウントが必要です。お持ちでない場合は <a href="https://accounts.google.com/signup" target="_blank">accounts.google.com</a> で無料作成できます。</span>
+        </li>
+        <li>
+          <strong>使用するPCのブラウザでGoogleアカウントにログインしておく</strong><br>
+          <span class="text-sm">Chrome、Firefox、Edge などで google.com にアクセスし、右上のアイコンでログイン済みであることを確認してください。</span>
+        </li>
+        <li>
+          <strong>二段階認証の設定を確認する</strong><br>
+          <span class="text-sm">二段階認証を設定している場合、CLIログイン時にスマートフォンでの承認が必要です。スマートフォンを手元に用意しておいてください。</span>
+        </li>
+      </ul>
+
+      <h3>ターミナル / PowerShell</h3>
+      <ul class="checklist">
+        <li>
+          <strong>ターミナル（Mac）またはPowerShell（Windows）が開けることを確認する</strong><br>
+          <span class="text-sm">Macは「Spotlight検索（Command + Space）」で「ターミナル」と入力して起動できます。Windowsはスタートメニューで「PowerShell」と検索して起動できます。</span>
+        </li>
+        <li>
+          <strong>Node.js と npm がインストールできる状態であることを確認する</strong><br>
+          <span class="text-sm">可能であれば、セットアップページの手順に従って事前にインストールを完了しておいてください。時間短縮になります。</span>
+        </li>
+        <li>
+          <strong>Windowsの場合: PowerShellのスクリプト実行ポリシーを確認する</strong><br>
+          <span class="text-sm">PowerShellで <code style="background:#f3f4f6; padding:2px 6px; border-radius:4px;">Get-ExecutionPolicy</code> を実行し、「Restricted」と表示された場合はトラブルシューティングガイドを参照してください。</span>
+        </li>
+      </ul>
+
+      <h3>セキュリティ・その他のソフトウェア</h3>
+      <ul class="checklist">
+        <li>
+          <strong>セキュリティソフトの設定を確認する</strong><br>
+          <span class="text-sm">ウイルス対策ソフトがnpmのインストールをブロックする場合があります。会社のセキュリティポリシーの範囲内で、一時的に設定を調整できるか確認しておいてください。</span>
+        </li>
+        <li>
+          <strong>Word・Excel・PowerPointが開ける状態であることを確認する</strong><br>
+          <span class="text-sm">Microsoft Officeがインストールされていることを確認してください。ない場合は無料のLibreOfficeまたはGoogle Docs/Sheetsで代替できます。</span>
+        </li>
+        <li>
+          <strong>ファイルを保存する場所（フォルダ）を決めておく</strong><br>
+          <span class="text-sm">デスクトップ上に「gemini-practice」フォルダなどを作っておくと、演習中のファイル管理がスムーズです。</span>
+        </li>
+      </ul>
+
+      <h3>Zoom / Google Meet（受講環境）</h3>
+      <ul class="checklist">
+        <li>
+          <strong>Zoom または Google Meet が正常に動作することを確認する</strong><br>
+          <span class="text-sm">カメラ・マイク・スピーカーが使える状態にしておいてください。接続テストを事前に行うことをお勧めします。</span>
+        </li>
+        <li>
+          <strong>PCの再起動ができる状態にしておく</strong><br>
+          <span class="text-sm">インストール後に再起動が必要になる場合があります。保存中の作業ファイルは事前に閉じておくと安心です。</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- 受講者へのお願い -->
+    <div class="section">
+      <h2>受講者へのお願い</h2>
+
+      <div class="step">
+        <span class="step-number">1</span>
+        <strong>開始10〜15分前には入室をお願いします</strong><br>
+        接続確認・マイクテスト・画面共有の確認など、開始前のウォームアップに時間を使います。開始ぎりぎりに入室すると、セットアップが遅れる場合があります。
+      </div>
+
+      <div class="step">
+        <span class="step-number">2</span>
+        <strong>事前準備は前日までに完了してください</strong><br>
+        Node.js・Gemini CLIのインストールは当日に行うと時間がかかり、他の受講者の進行に影響が出る場合があります。セットアップページを参考に、前日までに準備を完了してください。
+      </div>
+
+      <div class="step">
+        <span class="step-number">3</span>
+        <strong>会社PCをお使いの方は、情報システム部門へ事前確認をお願いします</strong><br>
+        Node.js・npm・Gemini CLIのインストール許可、PowerShellのスクリプト実行ポリシー変更が必要な場合があります。「業務効率化のためのAIツール研修に使用する」旨を伝えて確認してください。
+      </div>
+
+      <div class="step">
+        <span class="step-number">4</span>
+        <strong>エラーが出ても画面を閉じずに、そのまま共有してください</strong><br>
+        エラーメッセージは問題解決のための重要な情報です。慌てて閉じたり、再起動したりせず、エラー画面のスクリーンショットを撮るか、チャットにエラー内容を貼り付けてください。
+      </div>
+
+      <div class="step">
+        <span class="step-number">5</span>
+        <strong>演習フォルダ以外のファイルは操作しないようにしてください</strong><br>
+        講座では専用の演習フォルダ（sample_data_messy など）を使います。それ以外の場所のファイルを誤って削除・移動しないよう注意してください。
+      </div>
+
+      <div class="step">
+        <span class="step-number">6</span>
+        <strong>実務データ（個人情報・社内データ）は使用しないでください</strong><br>
+        演習には必ずサンプルデータを使用してください。AIへの入力に実在する顧客情報・社内機密情報を含めることは、セキュリティ上のリスクになります。
+      </div>
+
+      <div class="step">
+        <span class="step-number">7</span>
+        <strong>わからないことはその場で質問してください</strong><br>
+        チャットへの書き込みや音声での質問を歓迎します。「こんなこと聞いていいのか」という遠慮は不要です。同じ疑問を持っている方が必ずいます。
+      </div>
+
+      <div class="step">
+        <span class="step-number">8</span>
+        <strong>デスクトップを整理しておくことをお勧めします</strong><br>
+        画面共有をする場合、デスクトップが見えます。個人情報や機密ファイルのアイコン・ファイルが表示されないよう、事前に整理・移動しておくことをお勧めします。
+      </div>
+    </div>
+
+    <!-- OSセットアップへのリンク -->
+    <div class="section">
+      <h2>次のステップ: OS別セットアップ</h2>
+      <p>本講座はMac・Windows両方に対応しています。お使いのOSに合わせたセットアップ手順をご確認ください。</p>
+      <div class="alert alert-info" style="margin-top:16px;">
+        <div class="alert-title">ℹ️ セットアップは事前に完了してください</div>
+        <p>当日のセットアップは最低限のサポートのみとなります。スムーズな受講のため、前日までにインストールを完了してください。</p>
+      </div>
+      <div style="text-align:center; margin-top:24px;">
+        <a href="#section-choose-os" style="display:inline-block; background:#2563eb; color:#fff; text-decoration:none; padding:14px 36px; border-radius:8px; font-size:1.1em; font-weight:700;">OS別セットアップへ進む →</a>
+      </div>
+    </div>
+
+    <!-- ページナビ -->
+    
+
+
+  <!-- Footer -->
+      </div>
+    </div>
+
+    <div class="page-section" id="section-choose-os">
+      <div class="section-banner">
+        <h2>お使いのOSを選んでください</h2>
+        <p>セットアップ手順はOSによって異なります</p>
+      </div>
+      <div class="container">
+
+
+    <!-- パンくずリスト -->
+    
+
+    <!-- 説明 -->
+    <div class="section">
+      <h2>セットアップについて</h2>
+      <p>Gemini CLI を使えるようにするには、お使いのOSに合わせてソフトウェアをインストールする必要があります。Macの方はターミナル、Windowsの方はPowerShellを使ってセットアップを進めます。</p>
+      <p style="margin-top:12px;">インストールするもの：</p>
+      <ul style="margin-left:24px; margin-top:8px; line-height:2.2;">
+        <li><strong>Node.js</strong>（Gemini CLI の実行環境）</li>
+        <li><strong>npm</strong>（パッケージ管理ツール・Node.jsに同梱）</li>
+        <li><strong>@google/gemini-cli</strong>（Gemini CLIツール本体）</li>
+        <li><strong>Python</strong>（データ分析・グラフ作成・PDF生成などに使用）</li>
+      </ul>
+
+      <div class="alert alert-warning" style="margin-top:20px;">
+        <div class="alert-title">⚠️ 会社PCをご利用の方へ</div>
+        <p>会社支給のPCでは、ソフトウェアのインストールに制限がある場合があります。IT部門（情報システム部門）に事前確認を取ることを強くお勧めします。詳しくは<a href="#section-before">受講前のご案内</a>をご覧ください。</p>
+      </div>
+    </div>
+
+    <!-- OS選択カード -->
+    <div class="section">
+      <h2>OSを選んでください</h2>
+      <div class="os-selector">
+        <a href="#section-setup-mac" class="os-card os-card--mac">
+          <div class="os-icon">🍎</div>
+          <div class="os-name">macOS</div>
+          <div class="os-desc">ターミナルを使ったセットアップ</div>
+          <div style="margin-top:16px; font-size:0.88em; color:#475569; line-height:1.8;">
+            macOS 12 Monterey 以降<br>
+            ターミナルアプリを使用<br>
+            Homebrew のインストールを推奨
+          </div>
+          <div style="margin-top:16px; display:inline-block; background:#334155; color:#fff; padding:8px 24px; border-radius:6px; font-size:0.9em; font-weight:700;">
+            Macのセットアップへ →
+          </div>
+        </a>
+        <a href="#section-setup-win" class="os-card os-card--windows">
+          <div class="os-icon">🪟</div>
+          <div class="os-name">Windows</div>
+          <div class="os-desc">PowerShellを使ったセットアップ</div>
+          <div style="margin-top:16px; font-size:0.88em; color:#1e40af; line-height:1.8;">
+            Windows 10 / 11 対応<br>
+            PowerShell 5.1 以降を使用<br>
+            管理者権限が必要な場合あり
+          </div>
+          <div style="margin-top:16px; display:inline-block; background:#2563eb; color:#fff; padding:8px 24px; border-radius:6px; font-size:0.9em; font-weight:700;">
+            Windowsのセットアップへ →
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- OSの確認方法 -->
+    <div class="section">
+      <h2>OSの確認方法</h2>
+      <p>どちらのOSか分からない場合は、以下の方法で確認できます。</p>
+
+      <div class="os-switch" style="margin-top:16px;">
+        <div class="os-tabs">
+          <div class="os-tab active" data-os="mac">Macの確認方法</div>
+          <div class="os-tab" data-os="win">Windowsの確認方法</div>
+        </div>
+        <div class="os-content">
+          <div class="os-pane active" data-os="mac">
+            <div class="step">
+              <span class="step-number">1</span>
+              画面左上の <strong>Appleロゴ（）</strong> をクリックします
+            </div>
+            <div class="step">
+              <span class="step-number">2</span>
+              「<strong>このMacについて</strong>」を選択します
+            </div>
+            <div class="step">
+              <span class="step-number">3</span>
+              「macOS Ventura 13.x」などと表示されればMacです
+            </div>
+          </div>
+          <div class="os-pane" data-os="win">
+            <div class="step">
+              <span class="step-number">1</span>
+              <strong>スタートメニュー（Windowsロゴ）</strong> を右クリックします
+            </div>
+            <div class="step">
+              <span class="step-number">2</span>
+              「<strong>システム</strong>」または「<strong>設定</strong>」を選択します
+            </div>
+            <div class="step">
+              <span class="step-number">3</span>
+              「Windows 10」「Windows 11」などと表示されればWindowsです
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- セットアップ済みの方 -->
+    <div class="section">
+      <h2>セットアップ済みの方はレッスンへ</h2>
+      <p>すでにGemini CLIのインストールとログインが完了している方は、直接レッスンへお進みください。</p>
+
+      <div class="alert alert-info" style="margin-top:16px;">
+        <div class="alert-title">ℹ️ セットアップ完了の確認方法</div>
+        <p>ターミナル（またはPowerShell）で以下のコマンドを実行し、バージョン番号が表示されればセットアップ完了です。</p>
+        <div class="code-block" style="margin-top:12px;">
+<span class="prompt">node --version</span>
+<span class="output">v20.x.x  ← このように表示されればOK</span>
+
+<span class="prompt">gemini --version</span>
+<span class="output">x.x.x  ← このように表示されればOK</span>
+        </div>
+      </div>
+
+      <div style="text-align:center; margin-top:24px;">
+        <a href="#section-lesson01" style="display:inline-block; background:#059669; color:#fff; text-decoration:none; padding:14px 36px; border-radius:8px; font-size:1.1em; font-weight:700;">第1部: CLI起動とログインへ進む →</a>
+      </div>
+    </div>
+
+    <!-- ページナビ -->
+    
+
+
+  <!-- Footer -->
+      </div>
+    </div>
+
+    <div class="page-section" id="section-setup-mac">
+      <div class="section-banner mac">
+        <h2>Mac セットアップガイド</h2>
+        <p>ターミナルからGemini CLIを使えるようにする</p>
+      </div>
+      <div class="container">
+
+      <span class="os-badge os-badge--mac">macOS 向け</span>
+      <h1>Mac セットアップガイド</h1>
+      <p>Gemini CLI を Mac で使えるようにするための手順を、一つひとつ丁寧に説明します。</p>
+    <!-- Step 1: ターミナルの開き方 -->
+    <section class="section">
+      <div class="step">
+        <div class="step-number">1</div>
+        <h2>ターミナルを開こう</h2>
+      </div>
+      <p>
+        「ターミナル」とは、Mac に文字を打ち込んで命令を与えるアプリです。
+        普段使うマウス操作の代わりに、キーボードでコンピューターと会話する窓口だと思ってください。
+      </p>
+
+      <h3>開き方 ① Spotlight 検索（いちばん簡単）</h3>
+      <ol>
+        <li>キーボードの <strong>Command (⌘) + Space</strong> を同時に押します</li>
+        <li>画面中央に検索バーが現れます</li>
+        <li><strong>「ターミナル」</strong> と入力します</li>
+        <li>「ターミナル.app」が表示されたら <strong>Enter</strong> を押します</li>
+      </ol>
+
+      <h3>開き方 ② Launchpad から開く</h3>
+      <ol>
+        <li>Dock（画面下のバー）にある <strong>ロケットのアイコン（Launchpad）</strong> をクリック</li>
+        <li><strong>「その他」</strong> フォルダを開く</li>
+        <li><strong>「ターミナル」</strong> をクリック</li>
+      </ol>
+
+      <h3>開き方 ③ Finder から開く</h3>
+      <ol>
+        <li>Finder を開く（画面左下の笑顔のアイコン）</li>
+        <li>左サイドバーの <strong>「アプリケーション」</strong> をクリック</li>
+        <li><strong>「ユーティリティ」</strong> フォルダを開く</li>
+        <li><strong>「ターミナル」</strong> をダブルクリック</li>
+      </ol>
+
+      <div class="alert alert-info">
+        <strong>ターミナルが開いたら？</strong><br>
+        黒や白の画面に <code>username@MacBook ~ %</code> のような文字が表示されれば成功です。
+        この <code>%</code> または <code>$</code> マークの後ろにコマンドを入力します。
+      </div>
+    </section>
+
+    <!-- Step 2: 基本コマンド体験 -->
+    <section class="section">
+      <div class="step">
+        <div class="step-number">2</div>
+        <h2>基本コマンドを体験しよう</h2>
+      </div>
+      <p>
+        まずはターミナルの基本操作を練習しましょう。
+        コマンドを入力したら <strong>Enter</strong> キーを押して実行します。
+      </p>
+
+      <h3>現在地を確認する（pwd）</h3>
+      <p>「今、自分はコンピューターのどこにいるのか」を確認するコマンドです。</p>
+      <div class="code-block">
+        <span class="prompt">$</span> pwd
+      </div>
+      <p>
+        実行すると <code>/Users/あなたの名前</code> のようなパスが表示されます。
+        これが「現在地（ホームディレクトリ）」です。
+      </p>
+
+      <h3>ファイルやフォルダの一覧を見る（ls）</h3>
+      <p>現在地にあるファイルやフォルダの一覧を表示します。Finder で中身を見るのと同じです。</p>
+      <div class="code-block">
+        <span class="prompt">$</span> ls
+      </div>
+      <p>Desktop、Documents、Downloads などのフォルダ名が表示されれば OK です。</p>
+
+      <h3>デスクトップに移動する（cd）</h3>
+      <p><code>cd</code> は「Change Directory（場所を変える）」の略です。</p>
+      <div class="code-block">
+        <span class="prompt">$</span> cd ~/Desktop
+      </div>
+      <p>
+        <code>~/</code> は「ホームディレクトリ」を意味します。
+        コマンド実行後、<code>pwd</code> を打つと <code>/Users/あなたの名前/Desktop</code> になっているはずです。
+      </p>
+
+      <h3>作業フォルダを作る（mkdir）</h3>
+      <p>講座で使う専用フォルダをデスクトップに作りましょう。</p>
+      <div class="code-block">
+        <span class="prompt">$</span> mkdir gemini-workshop
+      </div>
+      <p>Finder でデスクトップを見ると「gemini-workshop」フォルダが作成されているはずです。</p>
+
+      <h3>作業フォルダに移動する</h3>
+      <div class="code-block">
+        <span class="prompt">$</span> cd gemini-workshop
+      </div>
+      <p><code>pwd</code> を打って <code>/Users/あなたの名前/Desktop/gemini-workshop</code> と表示されれば成功です。</p>
+
+      <div class="alert alert-warning">
+        <strong>注意：ダウンロードフォルダと混同しないように</strong><br>
+        作業ファイルはデスクトップの <code>gemini-workshop</code> フォルダに保存しましょう。
+        Downloads フォルダに保存してしまうと、後で迷子になりやすいです。
+      </div>
+    </section>
+
+    <!-- Step 3: Node.js -->
+    <section class="section">
+      <div class="step">
+        <div class="step-number">3</div>
+        <h2>Node.js を確認・インストールしよう</h2>
+      </div>
+      <p>
+        Gemini CLI は「Node.js」という仕組みの上で動きます。
+        まずインストール済みかどうか確認しましょう。
+      </p>
+
+      <h3>Node.js が入っているか確認</h3>
+      <div class="code-block">
+        <span class="prompt">$</span> node --version
+      </div>
+      <p>
+        <code>v20.11.0</code> のようなバージョン番号が表示されれば、すでにインストール済みです。
+        <strong>次の手順（インストール）はスキップして Step 4 へ進んでください。</strong>
+      </p>
+
+      <h3>Node.js が入っていない場合のインストール方法</h3>
+      <p>「command not found」と表示された場合はインストールが必要です。</p>
+      <ol>
+        <li>ブラウザで <strong>https://nodejs.org</strong> を開く</li>
+        <li><strong>「LTS（推奨版）」</strong> と書かれたボタンをクリックしてダウンロード</li>
+        <li>ダウンロードされた <code>.pkg</code> ファイルをダブルクリック</li>
+        <li>インストーラーの指示に従って「続ける」「インストール」をクリック</li>
+        <li>インストール完了後、ターミナルを<strong>一度閉じて再度開く</strong></li>
+        <li>再度 <code>node --version</code> を実行してバージョンが表示されることを確認</li>
+      </ol>
+
+      <h3>npm（パッケージマネージャー）も確認</h3>
+      <p>npm は Node.js と一緒にインストールされるツールです。</p>
+      <div class="code-block">
+        <span class="prompt">$</span> npm --version
+      </div>
+      <p><code>10.2.4</code> のようなバージョン番号が表示されれば OK です。</p>
+    </section>
+
+    <!-- Step 4: Gemini CLI インストール -->
+    <section class="section">
+      <div class="step">
+        <div class="step-number">4</div>
+        <h2>Gemini CLI をインストールしよう</h2>
+      </div>
+      <p>
+        いよいよ Gemini CLI をインストールします。
+        <code>npm</code> というコマンドを使って、インターネットから自動的にダウンロード・インストールされます。
+      </p>
+
+      <h3>インストールコマンドを実行</h3>
+      <div class="code-block">
+        <span class="prompt">$</span> npm install -g @google/gemini-cli
+      </div>
+      <p>
+        <code>-g</code> は「グローバル（Global）」の意味で、Mac 全体で使えるようにインストールします。
+        しばらく待つと完了メッセージが表示されます。
+      </p>
+
+      <div class="alert alert-info">
+        <strong>インストール中にエラーが出た場合</strong><br>
+        <code>sudo npm install -g @google/gemini-cli</code> のように先頭に <code>sudo</code> を付けて実行してください。
+        パスワードを求められたら Mac のログインパスワードを入力します（入力中は文字が表示されませんが正常です）。
+      </div>
+
+      <h3>インストールできたか確認</h3>
+      <div class="code-block">
+        <span class="prompt">$</span> gemini --version
+      </div>
+      <p>バージョン番号が表示されればインストール成功です。</p>
+    </section>
+
+    <!-- Step 5: Gemini CLI 起動 -->
+    <section class="section">
+      <div class="step">
+        <div class="step-number">5</div>
+        <h2>Gemini CLI を起動しよう</h2>
+      </div>
+
+      <h3>起動コマンドを実行</h3>
+      <div class="code-block">
+        <span class="prompt">$</span> gemini
+      </div>
+
+      <h3>初回起動時：Google アカウントでログイン</h3>
+      <p>初めて起動するときは、Google アカウントでの認証が必要です。</p>
+      <ol>
+        <li>ターミナルに認証用の URL またはブラウザ起動の案内が表示されます</li>
+        <li><strong>ブラウザが自動で開く</strong>（または表示された URL をブラウザで開く）</li>
+        <li>使用する <strong>Google アカウント</strong> を選択してログイン</li>
+        <li>「Gemini CLI にアクセスを許可しますか？」という画面で <strong>「許可」</strong> をクリック</li>
+        <li>「認証が完了しました」と表示されたらブラウザを閉じる</li>
+        <li><strong>ターミナルに戻る</strong>（Cmd + Tab または Dock からターミナルをクリック）</li>
+      </ol>
+
+      <div class="alert alert-info">
+        <strong>ブラウザからターミナルに戻るには？</strong><br>
+        <strong>Command (⌘) + Tab</strong> キーを押すとアプリを切り替えられます。
+        ターミナルのアイコンが選択されるまで Tab を押し続けてから指を離してください。
+      </div>
+    </section>
+
+    <!-- Step 6: 動作確認 -->
+    <section class="section">
+      <div class="step">
+        <div class="step-number">6</div>
+        <h2>動作確認をしよう</h2>
+      </div>
+
+      <h3>簡単な質問を投げかけてみよう</h3>
+      <p>ログイン後、Gemini CLI のプロンプト（入力待ち状態）が表示されます。試しに質問してみましょう。</p>
+      <div class="code-block">
+        &gt; 自己紹介してください
+      </div>
+      <p>Gemini からの回答がターミナルに表示されれば成功です！</p>
+
+      <h3>終了するには</h3>
+      <div class="code-block">
+        &gt; /exit
+      </div>
+      <p>または <strong>Ctrl + C</strong> を押して終了します。</p>
+
+      <div class="alert alert-info">
+        <strong>セットアップ完了！</strong><br>
+        これで Mac での Gemini CLI セットアップは完了です。
+        チェックリストで確認してから、レッスンへ進みましょう。
+      </div>
+    </section>
+
+    <!-- Mac特有の注意点 -->
+    <section class="section">
+      <h2>Mac 利用者への補足情報</h2>
+
+      <div class="alert alert-info">
+        <strong>Finder とターミナルの場所の対応について</strong><br>
+        ターミナルで <code>~/Desktop/gemini-workshop</code> と表示される場所は、
+        Finder で「デスクトップ」の中の「gemini-workshop」フォルダに対応しています。
+        迷ったときは、ターミナルで <code>open .</code> と入力すると、
+        現在地を Finder で開くことができます。
+      </div>
+
+      <div class="alert alert-warning">
+        <strong>zsh と bash の違いについて</strong><br>
+        最近の Mac では「zsh」というシェルが標準になっています。
+        古い記事などで「bash」の設定方法が書かれていても、通常は気にしなくて大丈夫です。
+        この講座のコマンドはどちらでも動作します。
+      </div>
+
+      <div class="alert alert-warning">
+        <strong>作業フォルダの場所を忘れてしまったら</strong><br>
+        ターミナルを新しく開いたときは毎回ホームディレクトリに戻ります。
+        作業を再開するときは <code>cd ~/Desktop/gemini-workshop</code> を実行してから始めましょう。
+      </div>
+    </section>
+
+    <!-- ナビゲーション -->
+      </div>
+    </div>
+
+    <div class="page-section" id="section-setup-win">
+      <div class="section-banner win">
+        <h2>Windows セットアップガイド</h2>
+        <p>PowerShellからGemini CLIを使えるようにする</p>
+      </div>
+      <div class="container">
+
+      <span class="os-badge os-badge--windows">Windows 向け</span>
+      <h1>Windows セットアップガイド</h1>
+      <p>Gemini CLI を Windows で使えるようにするための手順を、一つひとつ丁寧に説明します。</p>
+    <!-- Step 1: PowerShell の開き方 -->
+    <section class="section">
+      <div class="step">
+        <div class="step-number">1</div>
+        <h2>PowerShell を開こう</h2>
+      </div>
+      <p>
+        「PowerShell」とは、Windows に文字を打ち込んで命令を与えるアプリです。
+        普段使うマウス操作の代わりに、キーボードでコンピューターと会話する窓口だと思ってください。
+      </p>
+
+      <h3>開き方 ① スタートメニューから検索（いちばん簡単）</h3>
+      <ol>
+        <li>画面左下の <strong>スタートメニュー（Windowsアイコン）</strong> をクリック</li>
+        <li>検索ボックスに <strong>「PowerShell」</strong> と入力</li>
+        <li>「Windows PowerShell」または「PowerShell」が表示されたらクリック</li>
+      </ol>
+
+      <h3>開き方 ② ショートカットキーから開く</h3>
+      <ol>
+        <li><strong>Windows キー + X</strong> を同時に押す</li>
+        <li>表示されたメニューから <strong>「Windows PowerShell」</strong> をクリック</li>
+      </ol>
+
+      <div class="alert alert-info">
+        <strong>コマンドプロンプト（cmd）との違い</strong><br>
+        Windows には「コマンドプロンプト（cmd.exe）」という古い画面もありますが、
+        この講座では <strong>PowerShell</strong> を使います。
+        PowerShell の方が高機能で、現代的なコマンドが使えます。
+        PowerShell は青い背景が目印です（環境によって異なる場合があります）。
+      </div>
+
+      <div class="alert alert-info">
+        <strong>PowerShell が開いたら？</strong><br>
+        <code>PS C:\Users\あなたの名前&gt;</code> のような文字が表示されれば成功です。
+        この <code>&gt;</code> マークの後ろにコマンドを入力します。
+      </div>
+    </section>
+
+    <!-- Step 2: 基本コマンド -->
+    <section class="section">
+      <div class="step">
+        <div class="step-number">2</div>
+        <h2>基本コマンドを体験しよう</h2>
+      </div>
+      <p>
+        まずはターミナルの基本操作を練習しましょう。
+        コマンドを入力したら <strong>Enter</strong> キーを押して実行します。
+      </p>
+
+      <h3>現在地を確認する（pwd）</h3>
+      <p>「今、自分はコンピューターのどこにいるのか」を確認するコマンドです。</p>
+      <div class="code-block">
+        <span class="ps-prompt">PS&gt;</span> pwd
+      </div>
+      <p>
+        実行すると <code>C:\Users\あなたの名前</code> のようなパスが表示されます。
+        これが「現在地（ホームディレクトリ）」です。<br>
+        <small>※ <code>Get-Location</code> と入力しても同じ結果が得られます。</small>
+      </p>
+
+      <h3>ファイルやフォルダの一覧を見る（ls / dir）</h3>
+      <p>現在地にあるファイルやフォルダの一覧を表示します。エクスプローラーで中身を見るのと同じです。</p>
+      <div class="code-block">
+        <span class="ps-prompt">PS&gt;</span> ls
+      </div>
+      <p>
+        Desktop、Documents、Downloads などのフォルダ名が表示されれば OK です。<br>
+        <small>※ <code>dir</code> と入力しても同じ結果が得られます。</small>
+      </p>
+
+      <h3>デスクトップに移動する（cd）</h3>
+      <p><code>cd</code> は「Change Directory（場所を変える）」の略です。</p>
+      <div class="code-block">
+        <span class="ps-prompt">PS&gt;</span> cd ~\Desktop
+      </div>
+      <p>
+        <code>~\</code> は「ホームディレクトリ」を意味します。
+        コマンド実行後、<code>pwd</code> を打つと <code>C:\Users\あなたの名前\Desktop</code> になっているはずです。
+      </p>
+
+      <h3>作業フォルダを作る（mkdir）</h3>
+      <p>講座で使う専用フォルダをデスクトップに作りましょう。</p>
+      <div class="code-block">
+        <span class="ps-prompt">PS&gt;</span> mkdir gemini-workshop
+      </div>
+      <p>エクスプローラーでデスクトップを見ると「gemini-workshop」フォルダが作成されているはずです。</p>
+
+      <h3>作業フォルダに移動する</h3>
+      <div class="code-block">
+        <span class="ps-prompt">PS&gt;</span> cd gemini-workshop
+      </div>
+      <p><code>pwd</code> を打って <code>C:\Users\あなたの名前\Desktop\gemini-workshop</code> と表示されれば成功です。</p>
+
+      <div class="alert alert-warning">
+        <strong>注意：OneDrive とローカルフォルダの混在</strong><br>
+        Windows では「デスクトップ」が OneDrive と同期されている場合があります。
+        作業フォルダは <code>C:\Users\あなたの名前\Desktop\</code>（ローカル）に作ることを推奨します。
+        OneDrive 配下（<code>C:\Users\あなたの名前\OneDrive\Desktop\</code>）に作ると
+        同期の問題が起きることがあります。
+      </div>
+    </section>
+
+    <!-- Step 3: Node.js -->
+    <section class="section">
+      <div class="step">
+        <div class="step-number">3</div>
+        <h2>Node.js を確認・インストールしよう</h2>
+      </div>
+      <p>
+        Gemini CLI は「Node.js」という仕組みの上で動きます。
+        まずインストール済みかどうか確認しましょう。
+      </p>
+
+      <h3>Node.js が入っているか確認</h3>
+      <div class="code-block">
+        <span class="ps-prompt">PS&gt;</span> node --version
+      </div>
+      <p>
+        <code>v20.11.0</code> のようなバージョン番号が表示されれば、すでにインストール済みです。
+        <strong>次の手順（インストール）はスキップして Step 4 へ進んでください。</strong>
+      </p>
+
+      <h3>Node.js が入っていない場合のインストール方法</h3>
+      <p>「'node' は、内部コマンドまたは外部コマンド...」と表示された場合はインストールが必要です。</p>
+      <ol>
+        <li>ブラウザで <strong>https://nodejs.org</strong> を開く</li>
+        <li><strong>「LTS（推奨版）」</strong> と書かれたボタンをクリックしてダウンロード</li>
+        <li>ダウンロードされた <code>.msi</code> ファイルをダブルクリック</li>
+        <li>インストーラーの「Next」「Install」をクリックして進める</li>
+        <li>「Install」ボタンを押すと管理者権限の確認が出る場合があります →「はい」をクリック</li>
+        <li>インストール完了後、PowerShell を<strong>一度閉じて再度開く</strong></li>
+        <li>再度 <code>node --version</code> を実行してバージョンが表示されることを確認</li>
+      </ol>
+
+      <h3>npm（パッケージマネージャー）も確認</h3>
+      <div class="code-block">
+        <span class="ps-prompt">PS&gt;</span> npm --version
+      </div>
+      <p><code>10.2.4</code> のようなバージョン番号が表示されれば OK です。</p>
+
+      <div class="alert alert-warning">
+        <strong>会社 PC でインストールできない場合</strong><br>
+        会社の PC は管理者権限が制限されていることがあります。
+        インストールができない場合は、IT 部門または管理者に相談してください。
+      </div>
+    </section>
+
+    <!-- Step 4: 実行ポリシー確認 -->
+    <section class="section">
+      <div class="step">
+        <div class="step-number">4</div>
+        <h2>PowerShell の実行ポリシーを確認しよう</h2>
+      </div>
+      <p>
+        Windows の PowerShell には「実行ポリシー」という安全設定があります。
+        スクリプトが実行できるよう、設定を確認・変更します。
+      </p>
+
+      <h3>現在の実行ポリシーを確認</h3>
+      <div class="code-block">
+        <span class="ps-prompt">PS&gt;</span> Get-ExecutionPolicy
+      </div>
+      <p>
+        <code>RemoteSigned</code> または <code>Unrestricted</code> と表示された場合はそのまま次へ進んでください。<br>
+        <code>Restricted</code> と表示された場合は以下の変更が必要です。
+      </p>
+
+      <h3>実行ポリシーを変更する（Restricted の場合のみ）</h3>
+      <div class="code-block">
+        <span class="ps-prompt">PS&gt;</span> Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+      </div>
+      <p>
+        「実行ポリシーを変更しますか？」と聞かれたら <strong>Y</strong> を入力して Enter を押します。
+      </p>
+
+      <div class="alert alert-warning">
+        <strong>会社 PC では管理者に確認してから実行してください</strong><br>
+        会社のセキュリティポリシーによって実行ポリシーが制限されている場合があります。
+        勝手に変更すると問題になることがありますので、IT 部門に確認してから実行してください。
+      </div>
+    </section>
+
+    <!-- Step 5: Gemini CLI インストール・起動 -->
+    <section class="section">
+      <div class="step">
+        <div class="step-number">5</div>
+        <h2>Gemini CLI をインストール・起動しよう</h2>
+      </div>
+
+      <h3>インストールコマンドを実行</h3>
+      <div class="code-block">
+        <span class="ps-prompt">PS&gt;</span> npm install -g @google/gemini-cli
+      </div>
+      <p>
+        しばらく待つと完了メッセージが表示されます。
+        管理者権限のエラーが出た場合は、PowerShell を右クリックして「管理者として実行」してから再試行してください。
+      </p>
+
+      <h3>インストールできたか確認</h3>
+      <div class="code-block">
+        <span class="ps-prompt">PS&gt;</span> gemini --version
+      </div>
+      <p>バージョン番号が表示されればインストール成功です。</p>
+
+      <div class="alert alert-warning">
+        <strong>PATH が通っていない場合</strong><br>
+        <code>'gemini' は、内部コマンドまたは外部コマンド...</code> と表示された場合、
+        PowerShell を一度閉じて再度開いてから再試行してください。
+        それでも解決しない場合は <a href="#section-trouble-win">トラブルシューティング</a> を参照してください。
+      </div>
+
+      <h3>Gemini CLI を起動する</h3>
+      <div class="code-block">
+        <span class="ps-prompt">PS&gt;</span> gemini
+      </div>
+    </section>
+
+    <!-- Step 6: ログイン・動作確認 -->
+    <section class="section">
+      <div class="step">
+        <div class="step-number">6</div>
+        <h2>ログインと動作確認をしよう</h2>
+      </div>
+
+      <h3>初回起動時：Google アカウントでログイン</h3>
+      <p>初めて起動するときは、Google アカウントでの認証が必要です。</p>
+      <ol>
+        <li>PowerShell に認証用の URL またはブラウザ起動の案内が表示されます</li>
+        <li><strong>ブラウザが自動で開く</strong>（または表示された URL をブラウザで開く）</li>
+        <li>使用する <strong>Google アカウント</strong> を選択してログイン</li>
+        <li>「Gemini CLI にアクセスを許可しますか？」という画面で <strong>「許可」</strong> をクリック</li>
+        <li>「認証が完了しました」と表示されたらブラウザを閉じる</li>
+        <li><strong>PowerShell に戻る</strong>（Alt + Tab またはタスクバーから PowerShell をクリック）</li>
+      </ol>
+
+      <div class="alert alert-info">
+        <strong>ブラウザから PowerShell に戻るには？</strong><br>
+        <strong>Alt + Tab</strong> キーを押すとアプリを切り替えられます。
+        PowerShell のウィンドウが選択されるまで Tab を押し続けてから指を離してください。
+      </div>
+
+      <h3>簡単な質問を投げかけてみよう</h3>
+      <div class="code-block">
+        &gt; 自己紹介してください
+      </div>
+      <p>Gemini からの回答が表示されれば成功です！</p>
+
+      <h3>終了するには</h3>
+      <div class="code-block">
+        &gt; /exit
+      </div>
+      <p>または <strong>Ctrl + C</strong> を押して終了します。</p>
+
+      <h3>文字化けが起きた場合</h3>
+      <p>日本語が正しく表示されない場合は、以下のコマンドで文字コードを UTF-8 に変更します。</p>
+      <div class="code-block">
+        <span class="ps-prompt">PS&gt;</span> chcp 65001
+      </div>
+    </section>
+
+    <!-- Windows特有の注意点 -->
+    <section class="section">
+      <h2>Windows 利用者への補足情報</h2>
+
+      <div class="alert alert-info">
+        <strong>エクスプローラーと PowerShell の場所の対応</strong><br>
+        PowerShell で <code>C:\Users\あなたの名前\Desktop\gemini-workshop</code> と表示される場所は、
+        エクスプローラーで「デスクトップ」の中の「gemini-workshop」フォルダに対応しています。
+        迷ったときは、PowerShell で <code>explorer .</code> と入力すると、
+        現在地をエクスプローラーで開くことができます。
+      </div>
+
+      <div class="alert alert-warning">
+        <strong>管理者権限が必要なケース</strong><br>
+        npm でグローバルインストールを行う場合、管理者権限が必要なことがあります。
+        PowerShell を右クリックして「管理者として実行」を選ぶと管理者権限で起動できます。
+      </div>
+
+      <div class="alert alert-warning">
+        <strong>OneDrive 配下での問題</strong><br>
+        作業フォルダが OneDrive で同期されている場合、ファイルのロックや同期の競合が起きることがあります。
+        <code>C:\Users\あなたの名前\gemini-workshop</code>（OneDrive 配下でない場所）に
+        作業フォルダを作ることを推奨します。
+      </div>
+    </section>
+
+    <!-- ナビゲーション -->
+      </div>
+    </div>
+
+    <div class="page-section" id="section-checklist-mac">
+      <div class="section-banner mac">
+        <h2>Mac セットアップ確認</h2>
+        <p>セットアップが正しく完了しているか確認</p>
+      </div>
+      <div class="container">
+
+      <span class="os-badge os-badge--mac">macOS 向け</span>
+      <h1>Mac セットアップ確認チェックリスト</h1>
+      <p>セットアップが正しく完了しているか、一つひとつ確認しましょう。</p>
+    <section class="section">
+      <h2>セットアップ完了チェックリスト</h2>
+      <p>
+        以下の項目を上から順に確認してください。
+        各項目を実際に試してみて、できたらチェックを入れていきましょう。
+      </p>
+
+      <div class="alert alert-info">
+        <strong>チェックの仕方</strong><br>
+        各項目のチェックボックスをクリックすると、チェックが入ります。
+        すべてにチェックが入ったら完了です！
+      </div>
+
+      <ul class="checklist">
+        <li>
+          <label>
+            <input type="checkbox">
+            <span>ターミナルが開けた</span>
+          </label>
+          <p class="checklist-hint">
+            Spotlight（Cmd+Space）で「ターミナル」と検索して開けることを確認してください。
+            黒または白の画面に <code>%</code> マークが表示されれば OK です。
+          </p>
+        </li>
+
+        <li>
+          <label>
+            <input type="checkbox">
+            <span><code>pwd</code> で現在地が表示された</span>
+          </label>
+          <p class="checklist-hint">
+            ターミナルで <code>pwd</code> を入力して Enter を押すと、
+            <code>/Users/あなたの名前</code> のようなパスが表示されれば OK です。
+          </p>
+        </li>
+
+        <li>
+          <label>
+            <input type="checkbox">
+            <span><code>node --version</code> でバージョンが表示された</span>
+          </label>
+          <p class="checklist-hint">
+            <code>v20.11.0</code> のようなバージョン番号が表示されれば OK です。
+            表示されない場合は <a href="#section-setup-mac">Node.js のインストール手順</a> を確認してください。
+          </p>
+        </li>
+
+        <li>
+          <label>
+            <input type="checkbox">
+            <span><code>npm --version</code> でバージョンが表示された</span>
+          </label>
+          <p class="checklist-hint">
+            <code>10.2.4</code> のようなバージョン番号が表示されれば OK です。
+            Node.js と一緒にインストールされるので、node が使えれば npm も使えるはずです。
+          </p>
+        </li>
+
+        <li>
+          <label>
+            <input type="checkbox">
+            <span>作業フォルダ <code>gemini-workshop</code> が作成できた</span>
+          </label>
+          <p class="checklist-hint">
+            <code>cd ~/Desktop</code> でデスクトップに移動後、<code>mkdir gemini-workshop</code> を実行。
+            Finder のデスクトップに「gemini-workshop」フォルダが現れれば OK です。
+          </p>
+        </li>
+
+        <li>
+          <label>
+            <input type="checkbox">
+            <span><code>cd</code> で作業フォルダに移動できた</span>
+          </label>
+          <p class="checklist-hint">
+            <code>cd ~/Desktop/gemini-workshop</code> を実行後、<code>pwd</code> を打って
+            <code>/Users/あなたの名前/Desktop/gemini-workshop</code> と表示されれば OK です。
+          </p>
+        </li>
+
+        <li>
+          <label>
+            <input type="checkbox">
+            <span><code>gemini</code> コマンドが認識された</span>
+          </label>
+          <p class="checklist-hint">
+            <code>gemini --version</code> を実行してバージョン番号が表示されれば OK です。
+            「command not found」と出た場合は <a href="#section-trouble-mac">トラブルシューティング</a> を参照してください。
+          </p>
+        </li>
+
+        <li>
+          <label>
+            <input type="checkbox">
+            <span>Google ログインが完了した</span>
+          </label>
+          <p class="checklist-hint">
+            <code>gemini</code> を起動してブラウザでの Google 認証を完了させてください。
+            ターミナルに入力プロンプトが表示されれば認証完了です。
+          </p>
+        </li>
+
+        <li>
+          <label>
+            <input type="checkbox">
+            <span>簡単な質問に応答が返ってきた</span>
+          </label>
+          <p class="checklist-hint">
+            Gemini CLI が起動した状態で「こんにちは」や「自己紹介してください」と入力して
+            回答が返ってくれば、セットアップ完全完了です！
+          </p>
+        </li>
+      </ul>
+    </section>
+
+    <!-- 完了後の案内 -->
+    <section class="section">
+      <h2>チェックリストの結果は？</h2>
+
+      <div class="alert alert-success">
+        <strong>全項目にチェックが入った方へ</strong><br>
+        おめでとうございます！ セットアップが完了しました。
+        共通レッスンへ進んで、Gemini CLI の活用方法を学びましょう！
+        <br><br>
+        <a href="#section-lesson01" class="btn btn--primary">共通レッスン 01 へ進む &rarr;</a>
+      </div>
+
+      <div class="alert alert-warning">
+        <strong>チェックが入らない項目がある方へ</strong><br>
+        つまずいてしまった場合は、以下のリソースを参考にしてください。
+        <ul>
+          <li><a href="#section-setup-mac">Mac セットアップガイドに戻る</a></li>
+          <li><a href="#section-trouble-mac">Mac よくあるトラブルと対処法</a></li>
+        </ul>
+        それでも解決しない場合は、講師または受講者同士で確認し合いましょう。
+      </div>
+    </section>
+
+    <!-- ナビゲーション -->
+      </div>
+    </div>
+
+    <div class="page-section" id="section-checklist-win">
+      <div class="section-banner win">
+        <h2>Windows セットアップ確認</h2>
+        <p>セットアップが正しく完了しているか確認</p>
+      </div>
+      <div class="container">
+
+      <span class="os-badge os-badge--windows">Windows 向け</span>
+      <h1>Windows セットアップ確認チェックリスト</h1>
+      <p>セットアップが正しく完了しているか、一つひとつ確認しましょう。</p>
+    <section class="section">
+      <h2>セットアップ完了チェックリスト</h2>
+      <p>
+        以下の項目を上から順に確認してください。
+        各項目を実際に試してみて、できたらチェックを入れていきましょう。
+      </p>
+
+      <div class="alert alert-info">
+        <strong>チェックの仕方</strong><br>
+        各項目のチェックボックスをクリックすると、チェックが入ります。
+        すべてにチェックが入ったら完了です！
+      </div>
+
+      <ul class="checklist">
+        <li>
+          <label>
+            <input type="checkbox">
+            <span>PowerShell が開けた</span>
+          </label>
+          <p class="checklist-hint">
+            スタートメニューで「PowerShell」と検索して開けることを確認してください。
+            <code>PS C:\Users\あなたの名前&gt;</code> のような表示がされれば OK です。
+          </p>
+        </li>
+
+        <li>
+          <label>
+            <input type="checkbox">
+            <span><code>pwd</code> で現在地が表示された</span>
+          </label>
+          <p class="checklist-hint">
+            PowerShell で <code>pwd</code> を入力して Enter を押すと、
+            <code>C:\Users\あなたの名前</code> のようなパスが表示されれば OK です。
+          </p>
+        </li>
+
+        <li>
+          <label>
+            <input type="checkbox">
+            <span>実行ポリシーが確認できた</span>
+          </label>
+          <p class="checklist-hint">
+            <code>Get-ExecutionPolicy</code> を実行して結果を確認してください。
+            <code>RemoteSigned</code> または <code>Unrestricted</code> であれば OK です。
+            <code>Restricted</code> の場合はセットアップガイドの手順で変更が必要です。
+          </p>
+        </li>
+
+        <li>
+          <label>
+            <input type="checkbox">
+            <span><code>node --version</code> でバージョンが表示された</span>
+          </label>
+          <p class="checklist-hint">
+            <code>v20.11.0</code> のようなバージョン番号が表示されれば OK です。
+            表示されない場合は <a href="#section-setup-win">Node.js のインストール手順</a> を確認してください。
+          </p>
+        </li>
+
+        <li>
+          <label>
+            <input type="checkbox">
+            <span><code>npm --version</code> でバージョンが表示された</span>
+          </label>
+          <p class="checklist-hint">
+            <code>10.2.4</code> のようなバージョン番号が表示されれば OK です。
+            Node.js と一緒にインストールされるので、node が使えれば npm も使えるはずです。
+          </p>
+        </li>
+
+        <li>
+          <label>
+            <input type="checkbox">
+            <span>作業フォルダ <code>gemini-workshop</code> が作成できた</span>
+          </label>
+          <p class="checklist-hint">
+            <code>cd ~\Desktop</code> でデスクトップに移動後、<code>mkdir gemini-workshop</code> を実行。
+            エクスプローラーのデスクトップに「gemini-workshop」フォルダが現れれば OK です。
+          </p>
+        </li>
+
+        <li>
+          <label>
+            <input type="checkbox">
+            <span>OneDrive ではなくローカルに作業フォルダがある</span>
+          </label>
+          <p class="checklist-hint">
+            <code>pwd</code> を実行して表示されるパスが
+            <code>C:\Users\あなたの名前\Desktop\gemini-workshop</code> であることを確認してください。
+            <code>C:\Users\あなたの名前\OneDrive\Desktop\...</code> の場合は、
+            OneDrive 外の場所に作業フォルダを作り直すことを推奨します。
+          </p>
+        </li>
+
+        <li>
+          <label>
+            <input type="checkbox">
+            <span><code>cd</code> で作業フォルダに移動できた</span>
+          </label>
+          <p class="checklist-hint">
+            <code>cd ~\Desktop\gemini-workshop</code> を実行後、<code>pwd</code> を打って
+            <code>C:\Users\あなたの名前\Desktop\gemini-workshop</code> と表示されれば OK です。
+          </p>
+        </li>
+
+        <li>
+          <label>
+            <input type="checkbox">
+            <span><code>gemini</code> コマンドが認識された</span>
+          </label>
+          <p class="checklist-hint">
+            <code>gemini --version</code> を実行してバージョン番号が表示されれば OK です。
+            「認識されていません」と出た場合は <a href="#section-trouble-win">トラブルシューティング</a> を参照してください。
+          </p>
+        </li>
+
+        <li>
+          <label>
+            <input type="checkbox">
+            <span>Google ログインが完了した</span>
+          </label>
+          <p class="checklist-hint">
+            <code>gemini</code> を起動してブラウザでの Google 認証を完了させてください。
+            PowerShell に入力プロンプトが表示されれば認証完了です。
+          </p>
+        </li>
+
+        <li>
+          <label>
+            <input type="checkbox">
+            <span>簡単な質問に応答が返ってきた</span>
+          </label>
+          <p class="checklist-hint">
+            Gemini CLI が起動した状態で「こんにちは」や「自己紹介してください」と入力して
+            回答が返ってくれば、セットアップ完全完了です！
+          </p>
+        </li>
+      </ul>
+    </section>
+
+    <!-- 完了後の案内 -->
+    <section class="section">
+      <h2>チェックリストの結果は？</h2>
+
+      <div class="alert alert-success">
+        <strong>全項目にチェックが入った方へ</strong><br>
+        おめでとうございます！ セットアップが完了しました。
+        共通レッスンへ進んで、Gemini CLI の活用方法を学びましょう！
+        <br><br>
+        <a href="#section-lesson01" class="btn btn--primary">共通レッスン 01 へ進む &rarr;</a>
+      </div>
+
+      <div class="alert alert-warning">
+        <strong>チェックが入らない項目がある方へ</strong><br>
+        つまずいてしまった場合は、以下のリソースを参考にしてください。
+        <ul>
+          <li><a href="#section-setup-win">Windows セットアップガイドに戻る</a></li>
+          <li><a href="#section-trouble-win">Windows よくあるトラブルと対処法</a></li>
+        </ul>
+        それでも解決しない場合は、講師または受講者同士で確認し合いましょう。
+      </div>
+    </section>
+
+    <!-- ナビゲーション -->
+      </div>
+    </div>
+
+    <div class="page-section" id="section-trouble-mac">
+      <div class="section-banner mac">
+        <h2>Mac よくあるトラブルと対処法</h2>
+        <p>セットアップで困ったときの解決方法</p>
+      </div>
+      <div class="container">
+
+      <span class="os-badge os-badge--mac">macOS 向け</span>
+      <h1>Mac よくあるトラブルと対処法</h1>
+      <p>セットアップで困ったときは、まずここを確認してください。よくある問題と解決方法をまとめました。</p>
+    <section class="section">
+      <h2>目次</h2>
+      <ol>
+        <li><a href="#terminal-not-found">ターミナルが見つからない</a></li>
+        <li><a href="#node-not-found">「command not found: node」が表示される</a></li>
+        <li><a href="#gemini-not-found">「command not found: gemini」が表示される</a></li>
+        <li><a href="#browser-auth">ブラウザ認証後にターミナルに戻れない</a></li>
+        <li><a href="#path-unknown">フォルダのパスがわからない</a></li>
+        <li><a href="#permission-denied">「zsh: permission denied」が表示される</a></li>
+        <li><a href="#wrong-folder">Downloads フォルダに保存してしまった</a></li>
+        <li><a href="#finder-mismatch">Finder とターミナルの場所が一致しない</a></li>
+      </ol>
+    </section>
+
+    <!-- トラブル 1 -->
+    <section class="section" id="terminal-not-found">
+      <h2>1. ターミナルが見つからない</h2>
+
+      <div class="alert alert-warning">
+        <strong>症状</strong><br>
+        ターミナルアプリがどこにあるかわからない。
+      </div>
+
+      <h3>解決方法 ①：Spotlight 検索を使う（最も簡単）</h3>
+      <ol>
+        <li>キーボードの <strong>Command (⌘) + Space</strong> を同時に押す</li>
+        <li>「ターミナル」と入力する</li>
+        <li>「ターミナル.app」が表示されたら Enter を押す</li>
+      </ol>
+
+      <h3>解決方法 ②：Launchpad から探す</h3>
+      <ol>
+        <li>Dock のロケットアイコン（Launchpad）をクリック</li>
+        <li>右上の検索ボックスに「ターミナル」と入力</li>
+        <li>「ターミナル」アイコンが表示されたらクリック</li>
+      </ol>
+
+      <h3>解決方法 ③：Finder から直接開く</h3>
+      <ol>
+        <li>Finder を開く</li>
+        <li>メニューバーの「移動」→「ユーティリティ」をクリック（または Shift+Cmd+U）</li>
+        <li>「ターミナル.app」をダブルクリック</li>
+      </ol>
+    </section>
+
+    <!-- トラブル 2 -->
+    <section class="section" id="node-not-found">
+      <h2>2. 「command not found: node」が表示される</h2>
+
+      <div class="alert alert-warning">
+        <strong>症状</strong><br>
+        <code>node --version</code> を実行したときに <code>zsh: command not found: node</code> と表示される。
+      </div>
+
+      <h3>原因</h3>
+      <p>Node.js がインストールされていないか、インストールが完了していない状態です。</p>
+
+      <h3>解決方法</h3>
+      <ol>
+        <li>ブラウザで <strong>https://nodejs.org</strong> を開く</li>
+        <li><strong>「LTS（推奨版）」</strong> ボタンをクリックしてダウンロード</li>
+        <li>ダウンロードされた <code>.pkg</code> ファイルをダブルクリック</li>
+        <li>インストーラーに従って「続ける」「インストール」をクリック</li>
+        <li><strong>ターミナルを一度完全に閉じる</strong>（Cmd+Q）</li>
+        <li>ターミナルを再度開く</li>
+        <li><code>node --version</code> を実行してバージョンが表示されることを確認</li>
+      </ol>
+
+      <div class="alert alert-info">
+        <strong>ポイント</strong><br>
+        インストール後はターミナルを<strong>完全に終了</strong>してから再度開くことが重要です。
+        ターミナルを閉じただけ（Cmd+W）では不十分な場合があります。
+        Dock のターミナルアイコンを右クリック→「終了」で完全に終了できます。
+      </div>
+    </section>
+
+    <!-- トラブル 3 -->
+    <section class="section" id="gemini-not-found">
+      <h2>3. 「command not found: gemini」が表示される</h2>
+
+      <div class="alert alert-warning">
+        <strong>症状</strong><br>
+        <code>gemini</code> と入力したときに <code>zsh: command not found: gemini</code> と表示される。
+      </div>
+
+      <h3>原因と解決方法</h3>
+
+      <h4>原因 A：npm install がまだ実行されていない</h4>
+      <p>以下のコマンドでインストールを実行してください。</p>
+      <div class="code-block">
+        <span class="prompt">$</span> npm install -g @google/gemini-cli
+      </div>
+
+      <h4>原因 B：インストール後にターミナルを再起動していない</h4>
+      <p>
+        インストール完了後にターミナルを再起動（Cmd+Q で完全終了 → 再度起動）してから
+        再度 <code>gemini --version</code> を試してください。
+      </p>
+
+      <h4>原因 C：PATH が通っていない</h4>
+      <p>npm のグローバルインストール先がパスに含まれていない可能性があります。</p>
+      <div class="code-block">
+        <span class="prompt">$</span> npm bin -g
+      </div>
+      <p>
+        上のコマンドで表示されたパス（例: <code>/usr/local/bin</code>）が
+        PATH に含まれているか確認します。
+      </p>
+      <div class="code-block">
+        <span class="prompt">$</span> echo $PATH
+      </div>
+      <p>
+        npm のパスが表示されない場合は、<code>~/.zshrc</code> に追記が必要です。
+        詳しくは講師に確認してください。
+      </p>
+
+      <h4>原因 D：インストールにエラーが出ていた</h4>
+      <p>sudo を付けて再インストールを試みてください。</p>
+      <div class="code-block">
+        <span class="prompt">$</span> sudo npm install -g @google/gemini-cli
+      </div>
+    </section>
+
+    <!-- トラブル 4 -->
+    <section class="section" id="browser-auth">
+      <h2>4. ブラウザ認証後にターミナルに戻れない</h2>
+
+      <div class="alert alert-warning">
+        <strong>症状</strong><br>
+        Google 認証をブラウザで完了したが、ターミナルに戻り方がわからない。
+      </div>
+
+      <h3>解決方法</h3>
+
+      <h4>方法 ①：Cmd+Tab でアプリを切り替える</h4>
+      <ol>
+        <li><strong>Command (⌘) + Tab</strong> を押す</li>
+        <li>アプリ一覧が表示されるので、Tab キーを押し続けてターミナルを選択</li>
+        <li>Command キーを離す</li>
+      </ol>
+
+      <h4>方法 ②：Dock からターミナルをクリック</h4>
+      <ol>
+        <li>画面下の Dock を見る</li>
+        <li>ターミナルのアイコン（黒い画面のアイコン）をクリック</li>
+      </ol>
+
+      <h4>方法 ③：Spotlight で検索</h4>
+      <ol>
+        <li>Cmd+Space で Spotlight を開く</li>
+        <li>「ターミナル」と入力して Enter</li>
+      </ol>
+
+      <div class="alert alert-info">
+        <strong>認証後にターミナルで何も起きない場合</strong><br>
+        ブラウザで認証が完了すると、ターミナルが自動的に次のステップに進むことがあります。
+        ターミナルに戻ったら、何か表示が変わっているか確認してください。
+        Enter キーを押すと反応することもあります。
+      </div>
+    </section>
+
+    <!-- トラブル 5 -->
+    <section class="section" id="path-unknown">
+      <h2>5. フォルダのパスがわからない</h2>
+
+      <div class="alert alert-warning">
+        <strong>症状</strong><br>
+        今自分がどこにいるのか、どのフォルダを操作しているのかわからなくなった。
+      </div>
+
+      <h3>解決方法 ①：pwd で現在地を確認</h3>
+      <div class="code-block">
+        <span class="prompt">$</span> pwd
+      </div>
+      <p>現在のディレクトリのフルパスが表示されます。</p>
+
+      <h3>解決方法 ②：Finder で確認する</h3>
+      <div class="code-block">
+        <span class="prompt">$</span> open .
+      </div>
+      <p>
+        現在地を Finder で開きます。
+        Finder のウィンドウが開き、どのフォルダにいるか視覚的に確認できます。
+      </p>
+
+      <h3>解決方法 ③：ホームディレクトリに戻る</h3>
+      <p>迷ったときはホームディレクトリ（出発点）に戻りましょう。</p>
+      <div class="code-block">
+        <span class="prompt">$</span> cd ~
+      </div>
+      <p>その後、改めて <code>cd ~/Desktop/gemini-workshop</code> で作業フォルダに移動してください。</p>
+    </section>
+
+    <!-- トラブル 6 -->
+    <section class="section" id="permission-denied">
+      <h2>6. 「zsh: permission denied」が表示される</h2>
+
+      <div class="alert alert-warning">
+        <strong>症状</strong><br>
+        コマンドを実行しようとすると <code>zsh: permission denied: ./スクリプト名</code> と表示される。
+      </div>
+
+      <h3>原因</h3>
+      <p>ファイルに実行権限がない状態です。</p>
+
+      <h3>解決方法</h3>
+      <div class="code-block">
+        <span class="prompt">$</span> chmod +x ファイル名
+      </div>
+      <p>
+        <code>chmod +x</code> はファイルに「実行可能」の権限を与えるコマンドです。
+        ファイル名の部分は実際のファイル名に置き換えてください。
+      </p>
+      <p>実行後、再度コマンドを試してください。</p>
+
+      <div class="alert alert-info">
+        <strong>npm の場合は sudo を使う</strong><br>
+        npm install 時に permission denied が出た場合は：
+      </div>
+      <div class="code-block">
+        <span class="prompt">$</span> sudo npm install -g @google/gemini-cli
+      </div>
+    </section>
+
+    <!-- トラブル 7 -->
+    <section class="section" id="wrong-folder">
+      <h2>7. Downloads フォルダに保存してしまった</h2>
+
+      <div class="alert alert-warning">
+        <strong>症状</strong><br>
+        作業ファイルを誤って Downloads フォルダに保存してしまった。
+        作業フォルダ（gemini-workshop）に移したい。
+      </div>
+
+      <h3>解決方法：mv コマンドでファイルを移動する</h3>
+      <p><code>mv</code> は「Move（移動）」の略です。</p>
+      <div class="code-block">
+        <span class="prompt">$</span> mv ~/Downloads/ファイル名 ~/Desktop/gemini-workshop/
+      </div>
+      <p>
+        「ファイル名」の部分は実際のファイル名に置き換えてください。
+        例えば <code>sample.txt</code> というファイルであれば：
+      </p>
+      <div class="code-block">
+        <span class="prompt">$</span> mv ~/Downloads/sample.txt ~/Desktop/gemini-workshop/
+      </div>
+
+      <h3>フォルダごと移動したい場合</h3>
+      <div class="code-block">
+        <span class="prompt">$</span> mv ~/Downloads/フォルダ名 ~/Desktop/gemini-workshop/
+      </div>
+
+      <div class="alert alert-info">
+        <strong>Finder でも移動できます</strong><br>
+        ファイルを選択して Cmd+C（コピー）または Cmd+X（切り取り）→
+        移動先フォルダで Cmd+V（貼り付け）でも同じことができます。
+      </div>
+    </section>
+
+    <!-- トラブル 8 -->
+    <section class="section" id="finder-mismatch">
+      <h2>8. Finder とターミナルの場所が一致しない</h2>
+
+      <div class="alert alert-warning">
+        <strong>症状</strong><br>
+        ターミナルで操作しているフォルダと、Finder で見ているフォルダが別の場所になっている。
+        どちらが正しいのかわからない。
+      </div>
+
+      <h3>解決方法 ①：ターミナルからFinder を開く（最も確実）</h3>
+      <div class="code-block">
+        <span class="prompt">$</span> open .
+      </div>
+      <p>
+        このコマンドを実行すると、ターミナルで現在いる場所を Finder で開きます。
+        これでターミナルとFinder の場所を一致させることができます。
+      </p>
+
+      <h3>解決方法 ②：Finder からターミナルの場所を確認する</h3>
+      <ol>
+        <li>Finder でフォルダを開く</li>
+        <li>Finder のウィンドウ下部に現在のパスが表示される（表示されない場合は「表示」→「パスバーを表示」をクリック）</li>
+        <li>パスバーのフォルダをターミナルにドラッグ&amp;ドロップすることで、そのパスを入力できる</li>
+      </ol>
+
+      <h3>解決方法 ③：ターミナルでフルパスを確認する</h3>
+      <div class="code-block">
+        <span class="prompt">$</span> pwd
+      </div>
+      <p>
+        表示されたパスを Finder の「移動」→「フォルダへ移動...」（Shift+Cmd+G）に
+        貼り付けることで、Finder でも同じ場所を開けます。
+      </p>
+    </section>
+
+    <!-- ナビゲーション -->
+      </div>
+    </div>
+
+    <div class="page-section" id="section-trouble-win">
+      <div class="section-banner win">
+        <h2>Windows よくあるトラブルと対処法</h2>
+        <p>セットアップで困ったときの解決方法</p>
+      </div>
+      <div class="container">
+
+      <span class="os-badge os-badge--windows">Windows 向け</span>
+      <h1>Windows よくあるトラブルと対処法</h1>
+      <p>セットアップで困ったときは、まずここを確認してください。よくある問題と解決方法をまとめました。</p>
+    <section class="section">
+      <h2>目次</h2>
+      <ol>
+        <li><a href="#powershell-not-found">PowerShell が見つからない</a></li>
+        <li><a href="#node-not-found-win">「'node' は認識されていません」が表示される</a></li>
+        <li><a href="#gemini-not-found-win">「'gemini' は認識されていません」が表示される</a></li>
+        <li><a href="#execution-policy">実行ポリシーエラーが表示される</a></li>
+        <li><a href="#admin-required">管理者権限が必要と表示される</a></li>
+        <li><a href="#onedrive-issue">OneDrive 配下で問題が起きる</a></li>
+        <li><a href="#browser-auth-win">ブラウザ認証後の戻り方がわからない</a></li>
+        <li><a href="#mojibake">文字化けする</a></li>
+        <li><a href="#company-pc">会社 PC でインストールできない</a></li>
+      </ol>
+    </section>
+
+    <!-- トラブル 1 -->
+    <section class="section" id="powershell-not-found">
+      <h2>1. PowerShell が見つからない</h2>
+
+      <div class="alert alert-warning">
+        <strong>症状</strong><br>
+        PowerShell アプリがどこにあるかわからない。
+      </div>
+
+      <h3>解決方法 ①：スタートメニューで検索（最も簡単）</h3>
+      <ol>
+        <li>画面左下の <strong>Windowsアイコン（スタートボタン）</strong> をクリック</li>
+        <li>検索ボックスに <strong>「PowerShell」</strong> と入力</li>
+        <li>「Windows PowerShell」が表示されたらクリック</li>
+      </ol>
+
+      <h3>解決方法 ②：Win+X キーから開く</h3>
+      <ol>
+        <li><strong>Windowsキー + X</strong> を同時に押す</li>
+        <li>表示されたメニューから「Windows PowerShell」をクリック</li>
+      </ol>
+
+      <h3>解決方法 ③：ファイル名を指定して実行</h3>
+      <ol>
+        <li><strong>Windowsキー + R</strong> を同時に押す</li>
+        <li>「ファイル名を指定して実行」が開く</li>
+        <li><code>powershell</code> と入力して Enter</li>
+      </ol>
+
+      <div class="alert alert-info">
+        <strong>コマンドプロンプト（cmd）ではなく PowerShell を使うこと</strong><br>
+        「コマンドプロンプト」と「PowerShell」は別のアプリです。
+        この講座では <strong>PowerShell</strong> を使用します。
+        間違えやすいので、タイトルバーに「PowerShell」と表示されているか確認してください。
+      </div>
+    </section>
+
+    <!-- トラブル 2 -->
+    <section class="section" id="node-not-found-win">
+      <h2>2. 「'node' は認識されていません」が表示される</h2>
+
+      <div class="alert alert-warning">
+        <strong>症状</strong><br>
+        <code>node --version</code> を実行したときに<br>
+        <code>'node' は、内部コマンドまたは外部コマンド、操作可能なプログラムまたはバッチ ファイルとして認識されていません。</code><br>
+        と表示される。
+      </div>
+
+      <h3>原因</h3>
+      <p>Node.js がインストールされていないか、PATH が正しく設定されていない状態です。</p>
+
+      <h3>解決方法 ①：Node.js をインストールする</h3>
+      <ol>
+        <li>ブラウザで <strong>https://nodejs.org</strong> を開く</li>
+        <li><strong>「LTS（推奨版）」</strong> ボタンをクリックしてダウンロード</li>
+        <li>ダウンロードされた <code>.msi</code> ファイルをダブルクリック</li>
+        <li>インストーラーの「Next」→「Install」をクリック</li>
+        <li>管理者権限の確認が出たら「はい」をクリック</li>
+        <li><strong>PowerShell を一度完全に閉じる</strong></li>
+        <li>PowerShell を再度開く</li>
+        <li><code>node --version</code> を実行してバージョンが表示されることを確認</li>
+      </ol>
+
+      <h3>解決方法 ②：インストール済みだが認識されない場合</h3>
+      <p>PowerShell を完全に閉じてから再起動すると解決することがあります。</p>
+      <p>それでも解決しない場合は PATH の設定を確認してください。</p>
+      <div class="code-block">
+        <span class="ps-prompt">PS&gt;</span> $env:PATH -split ";"
+      </div>
+      <p>
+        表示された一覧の中に Node.js のインストール先
+        （通常 <code>C:\Program Files\nodejs</code>）が含まれているか確認してください。
+      </p>
+    </section>
+
+    <!-- トラブル 3 -->
+    <section class="section" id="gemini-not-found-win">
+      <h2>3. 「'gemini' は認識されていません」が表示される</h2>
+
+      <div class="alert alert-warning">
+        <strong>症状</strong><br>
+        <code>gemini</code> と入力したときに「認識されていません」と表示される。
+      </div>
+
+      <h3>原因と解決方法</h3>
+
+      <h4>原因 A：npm install がまだ実行されていない</h4>
+      <p>以下のコマンドでインストールを実行してください。</p>
+      <div class="code-block">
+        <span class="ps-prompt">PS&gt;</span> npm install -g @google/gemini-cli
+      </div>
+
+      <h4>原因 B：インストール後に PowerShell を再起動していない</h4>
+      <p>
+        インストール完了後に PowerShell を完全に閉じて再度開いてから
+        <code>gemini --version</code> を試してください。
+      </p>
+
+      <h4>原因 C：npm のグローバルインストール先が PATH に含まれていない</h4>
+      <div class="code-block">
+        <span class="ps-prompt">PS&gt;</span> npm bin -g
+      </div>
+      <p>
+        表示されたパスが環境変数 PATH に含まれているか確認してください。
+        含まれていない場合は手動で PATH に追加するか、
+        PowerShell を管理者として実行してインストールし直してください。
+      </p>
+
+      <h4>原因 D：管理者権限が必要</h4>
+      <p>PowerShell を右クリック→「管理者として実行」してから再インストールを試みてください。</p>
+      <div class="code-block">
+        <span class="ps-prompt">PS&gt;</span> npm install -g @google/gemini-cli
+      </div>
+    </section>
+
+    <!-- トラブル 4 -->
+    <section class="section" id="execution-policy">
+      <h2>4. 実行ポリシーエラーが表示される</h2>
+
+      <div class="alert alert-warning">
+        <strong>症状</strong><br>
+        スクリプトを実行しようとすると以下のようなエラーが表示される：<br>
+        <code>このシステムではスクリプトの実行が無効になっているため、ファイル ... を読み込むことができません。</code>
+      </div>
+
+      <h3>原因</h3>
+      <p>PowerShell の実行ポリシーが「Restricted（制限）」になっています。</p>
+
+      <h3>現在の実行ポリシーを確認</h3>
+      <div class="code-block">
+        <span class="ps-prompt">PS&gt;</span> Get-ExecutionPolicy
+      </div>
+      <p><code>Restricted</code> と表示された場合は変更が必要です。</p>
+
+      <h3>解決方法：実行ポリシーを変更する</h3>
+      <div class="code-block">
+        <span class="ps-prompt">PS&gt;</span> Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+      </div>
+      <p>「実行ポリシーを変更しますか？」と聞かれたら <strong>Y</strong> を入力して Enter を押します。</p>
+
+      <div class="alert alert-warning">
+        <strong>会社 PC では管理者に確認してから実行してください</strong><br>
+        会社のセキュリティポリシーによって実行ポリシーの変更が制限されている場合があります。
+        IT 部門に確認してから実行してください。
+      </div>
+    </section>
+
+    <!-- トラブル 5 -->
+    <section class="section" id="admin-required">
+      <h2>5. 管理者権限が必要と表示される</h2>
+
+      <div class="alert alert-warning">
+        <strong>症状</strong><br>
+        コマンド実行時に「管理者権限が必要です」「アクセスが拒否されました」などのエラーが表示される。
+      </div>
+
+      <h3>解決方法：PowerShell を管理者として実行する</h3>
+      <ol>
+        <li>スタートメニューで「PowerShell」を検索</li>
+        <li>表示された「Windows PowerShell」を<strong>右クリック</strong></li>
+        <li>「<strong>管理者として実行</strong>」をクリック</li>
+        <li>「このアプリがデバイスに変更を加えることを許可しますか？」→「はい」をクリック</li>
+        <li>管理者権限で開いた PowerShell（タイトルバーに「管理者」と表示）でコマンドを実行</li>
+      </ol>
+
+      <div class="alert alert-info">
+        <strong>管理者権限の PowerShell の見分け方</strong><br>
+        タイトルバーに「管理者: Windows PowerShell」と表示されていれば管理者権限で動作しています。
+      </div>
+
+      <div class="alert alert-warning">
+        <strong>会社 PC でも管理者権限が取れない場合</strong><br>
+        会社の PC は管理者権限が完全にロックされていることがあります。
+        その場合は IT 部門に相談し、インストールを依頼してください。
+        または、<a href="#company-pc">会社 PC でインストールできない場合</a> を参照してください。
+      </div>
+    </section>
+
+    <!-- トラブル 6 -->
+    <section class="section" id="onedrive-issue">
+      <h2>6. OneDrive 配下で問題が起きる</h2>
+
+      <div class="alert alert-warning">
+        <strong>症状</strong><br>
+        作業フォルダを OneDrive と同期されているデスクトップに作成したため、
+        ファイルのロックや同期の競合が起きる。
+      </div>
+
+      <h3>原因</h3>
+      <p>
+        Windows の「デスクトップ」フォルダが OneDrive と同期されている場合、
+        OneDrive がファイルをロックすることがあります。
+        この状態で CLI ツールがファイルを操作しようとすると競合が起きます。
+      </p>
+
+      <h3>解決方法：作業フォルダをローカルに移動する</h3>
+      <ol>
+        <li>ローカルの作業フォルダを作成する</li>
+      </ol>
+      <div class="code-block">
+        <span class="ps-prompt">PS&gt;</span> mkdir C:\Users\$env:USERNAME\gemini-workshop
+      </div>
+      <ol start="2">
+        <li>作業フォルダに移動する</li>
+      </ol>
+      <div class="code-block">
+        <span class="ps-prompt">PS&gt;</span> cd C:\Users\$env:USERNAME\gemini-workshop
+      </div>
+      <p>
+        これで OneDrive の影響を受けない場所に作業フォルダが作成されます。
+      </p>
+
+      <h3>OneDrive かどうかを確認する方法</h3>
+      <div class="code-block">
+        <span class="ps-prompt">PS&gt;</span> pwd
+      </div>
+      <p>
+        パスに <code>OneDrive</code> が含まれている場合（例: <code>C:\Users\名前\OneDrive\Desktop</code>）は
+        OneDrive 配下にいます。上記の手順でローカルに移動してください。
+      </p>
+    </section>
+
+    <!-- トラブル 7 -->
+    <section class="section" id="browser-auth-win">
+      <h2>7. ブラウザ認証後の戻り方がわからない</h2>
+
+      <div class="alert alert-warning">
+        <strong>症状</strong><br>
+        Google 認証をブラウザで完了したが、PowerShell に戻り方がわからない。
+      </div>
+
+      <h3>解決方法</h3>
+
+      <h4>方法 ①：Alt+Tab でアプリを切り替える</h4>
+      <ol>
+        <li><strong>Alt + Tab</strong> を押す</li>
+        <li>アプリ一覧が表示されるので、Tab キーを押し続けて PowerShell を選択</li>
+        <li>Alt キーを離す</li>
+      </ol>
+
+      <h4>方法 ②：タスクバーから PowerShell をクリック</h4>
+      <ol>
+        <li>画面下のタスクバーを見る</li>
+        <li>PowerShell のアイコンをクリック</li>
+      </ol>
+
+      <div class="alert alert-info">
+        <strong>認証後に PowerShell で何も起きない場合</strong><br>
+        ブラウザで認証が完了すると、PowerShell が自動的に次のステップに進むことがあります。
+        PowerShell に戻ったら、Enter キーを押して反応を確認してください。
+      </div>
+    </section>
+
+    <!-- トラブル 8 -->
+    <section class="section" id="mojibake">
+      <h2>8. 文字化けする</h2>
+
+      <div class="alert alert-warning">
+        <strong>症状</strong><br>
+        PowerShell で日本語が正しく表示されず、文字化けしている。
+        例：「縺薙s縺ォ縺。縺ッ」のような表示になる。
+      </div>
+
+      <h3>原因</h3>
+      <p>PowerShell の文字コードが UTF-8 ではなく Shift-JIS などになっています。</p>
+
+      <h3>解決方法：文字コードを UTF-8 に変更する</h3>
+      <div class="code-block">
+        <span class="ps-prompt">PS&gt;</span> chcp 65001
+      </div>
+      <p>
+        <code>65001</code> は UTF-8 のコードページ番号です。
+        実行後、文字化けが解消されるか確認してください。
+      </p>
+
+      <h3>永続的に設定したい場合</h3>
+      <p>PowerShell のプロファイルに設定を追加することで、毎回自動的に UTF-8 になります。</p>
+      <div class="code-block">
+        <span class="ps-prompt">PS&gt;</span> Add-Content $PROFILE "`n[Console]::OutputEncoding = [Text.Encoding]::UTF8"
+      </div>
+      <p>この設定は次回 PowerShell を起動したときから有効になります。</p>
+    </section>
+
+    <!-- トラブル 9 -->
+    <section class="section" id="company-pc">
+      <h2>9. 会社 PC でインストールができない</h2>
+
+      <div class="alert alert-warning">
+        <strong>症状</strong><br>
+        会社のパソコンでは管理者権限がなく、Node.js や Gemini CLI のインストールができない。
+      </div>
+
+      <h3>まず確認すること</h3>
+      <ol>
+        <li>
+          <strong>IT 部門に問い合わせる</strong><br>
+          Node.js のインストールを依頼することができます。
+          「業務で生成 AI ツールを利用するために Node.js のインストールが必要です」と説明してください。
+        </li>
+        <li>
+          <strong>インストール不要の代替ツールを確認する</strong><br>
+          Gemini の Web 版（https://gemini.google.com）はブラウザだけで使えます。
+          CLI の全機能は使えませんが、基本的な AI 活用は可能です。
+        </li>
+        <li>
+          <strong>ポータブル版 Node.js を検討する</strong><br>
+          管理者権限なしでも使える「ポータブル版」の Node.js があります。
+          ただし、会社のセキュリティポリシーで許可されているか確認が必要です。
+        </li>
+      </ol>
+
+      <div class="alert alert-info">
+        <strong>個人所有の PC を使う選択肢</strong><br>
+        会社の PC でインストールが難しい場合は、個人の PC（ノートパソコンなど）で
+        セットアップを行い、講座に参加することも選択肢の一つです。
+        その場合は Mac セットアップガイドまたは Windows セットアップガイドを参照してください。
+      </div>
+
+      <div class="alert alert-warning">
+        <strong>セキュリティポリシーを無視しないこと</strong><br>
+        会社のセキュリティルールを回避してのインストールは行わないでください。
+        必ず承認を得てから作業を進めてください。
+      </div>
+    </section>
+
+    <!-- ナビゲーション -->
+      </div>
+    </div>
+
+    <div class="page-section" id="section-trouble-general">
+      <div class="section-banner">
+        <h2>トラブルシューティングガイド</h2>
+        <p>講座全体で使える総合トラブル対処</p>
+      </div>
+      <div class="container">
+
+
+    <!-- パンくずリスト -->
+    
+
+    <div class="alert alert-info">
+      <div class="alert-title">ℹ️ このガイドの使い方</div>
+      <p>問題のカテゴリをご確認いただき、該当する項目を探してください。解決しない場合は講師またはサポートスタッフにご連絡ください。エラー画面のスクリーンショットがあると問題解決が早まります。</p>
+    </div>
+
+    <!-- ==================== 1. ターミナル / PowerShell関連 ==================== -->
+    <div class="section">
+      <h2>1. ターミナル / PowerShell 関連</h2>
+
+      <!-- 問題1-1 -->
+      <h3>開き方がわからない</h3>
+      <div class="alert alert-warning">
+        <div class="alert-title">問題</div>
+        ターミナル（Mac）またはPowerShell（Windows）の起動方法がわからない
+      </div>
+
+      <h4>Macの場合 - ターミナルの起動方法</h4>
+      <div class="step">
+        <span class="step-number">方法1</span>
+        <strong>Spotlight検索を使う（最も簡単）</strong><br>
+        キーボードで <kbd style="background:#eee; padding:2px 8px; border-radius:4px; border:1px solid #ccc;">Command（⌘）+ Space</kbd> を同時に押すと検索バーが開きます。「ターミナル」と入力してEnterキーを押してください。
+      </div>
+      <div class="step">
+        <span class="step-number">方法2</span>
+        <strong>Finderから開く</strong><br>
+        Finderを開き、「アプリケーション → ユーティリティ → ターミナル」の順にダブルクリックしてください。
+      </div>
+
+      <h4>Windowsの場合 - PowerShellの起動方法</h4>
+      <div class="step">
+        <span class="step-number">方法1</span>
+        <strong>スタートメニューから検索（最も簡単）</strong><br>
+        画面左下のWindowsロゴをクリックし、「PowerShell」と入力して検索します。「Windows PowerShell」または「PowerShell 5」を選んで開いてください。
+      </div>
+      <div class="step">
+        <span class="step-number">方法2</span>
+        <strong>ショートカットキーを使う</strong><br>
+        <kbd style="background:#eee; padding:2px 8px; border-radius:4px; border:1px solid #ccc;">Windows</kbd> + <kbd style="background:#eee; padding:2px 8px; border-radius:4px; border:1px solid #ccc;">R</kbd> を押し、「powershell」と入力してEnterキーを押してください。
+      </div>
+      <div class="step">
+        <span class="step-number">方法3</span>
+        <strong>管理者として実行する場合</strong><br>
+        スタートメニューで「PowerShell」を検索し、右クリックして「管理者として実行」を選択してください。Node.jsのインストール時に必要になる場合があります。
+      </div>
+
+      <!-- 問題1-2 -->
+      <h3>カレントフォルダ（現在の場所）がわからない</h3>
+      <div class="alert alert-warning">
+        <div class="alert-title">問題</div>
+        ターミナル/PowerShellで「今どのフォルダにいるか」がわからない
+      </div>
+      <div class="step">
+        <span class="step-number">解決</span>
+        以下のコマンドを入力してEnterキーを押すと、現在の場所（フォルダパス）が表示されます。
+      </div>
+      <div class="os-switch">
+        <div class="os-tabs">
+          <div class="os-tab active" data-os="mac">Mac（ターミナル）</div>
+          <div class="os-tab" data-os="win">Windows（PowerShell）</div>
+        </div>
+        <div class="os-content">
+          <div class="os-pane active" data-os="mac">
+            <div class="code-block">
+<span class="prompt">pwd</span>
+<span class="output">/Users/username/Desktop  ← 現在の場所が表示されます</span>
+
+<span class="prompt">ls</span>
+<span class="output">gemini-practice  Documents  Downloads  ← フォルダ内のファイル一覧</span>
+            </div>
+            <p style="margin-top:8px;">別のフォルダへ移動するには <code style="background:#f3f4f6; padding:2px 6px; border-radius:4px;">cd フォルダ名</code> を使います。</p>
+            <div class="code-block">
+<span class="prompt">cd Desktop</span>
+<span class="prompt">cd gemini-practice</span>
+<span class="prompt">cd ..</span>
+<span class="output">← 1つ上のフォルダへ戻る</span>
+            </div>
+          </div>
+          <div class="os-pane" data-os="win">
+            <div class="code-block">
+<span class="ps-prompt">pwd</span>
+<span class="output">Path
+----
+C:\Users\username\Desktop  ← 現在の場所が表示されます</span>
+
+<span class="ps-prompt">dir</span>
+<span class="output">    Directory: C:\Users\username\Desktop
+
+gemini-practice  Documents  ← フォルダ内のファイル一覧</span>
+            </div>
+            <p style="margin-top:8px;">別のフォルダへ移動するには <code style="background:#f3f4f6; padding:2px 6px; border-radius:4px;">cd フォルダ名</code> を使います。</p>
+            <div class="code-block">
+<span class="ps-prompt">cd Desktop</span>
+<span class="ps-prompt">cd gemini-practice</span>
+<span class="ps-prompt">cd ..</span>
+<span class="output">← 1つ上のフォルダへ戻る</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 問題1-3 -->
+      <h3>コマンドの入力場所がわからない</h3>
+      <div class="alert alert-warning">
+        <div class="alert-title">問題</div>
+        どこにコマンドを入力すればよいか、カーソルがどこにあるかわからない
+      </div>
+      <div class="step">
+        <span class="step-number">解説</span>
+        ターミナルやPowerShellを開くと、次のようなプロンプト（入力待ちの記号）が表示されています。プロンプトの右側にカーソルが点滅しているところが入力場所です。
+      </div>
+      <div class="code-block">
+<span class="output"># Macのターミナルの例
+username@MacBook ~ %  ← ここにカーソルが点滅している
+
+# PowerShellの例
+PS C:\Users\username>  ← ここにカーソルが点滅している</span>
+      </div>
+      <div class="alert alert-info">
+        <div class="alert-title">ℹ️ ポイント</div>
+        コマンドを入力した後、必ず <kbd style="background:#eee; padding:2px 8px; border-radius:4px; border:1px solid #ccc;">Enter</kbd> キーを押して実行してください。コピーペーストはできますが、貼り付け後もEnterが必要です。
+      </div>
+    </div>
+
+    <!-- ==================== 2. インストール関連 ==================== -->
+    <div class="section">
+      <h2>2. インストール関連</h2>
+
+      <!-- 問題2-1 -->
+      <h3>Node.js がインストールされていない</h3>
+      <div class="alert alert-warning">
+        <div class="alert-title">問題</div>
+        <code>node --version</code> を実行したら「command not found」や「コマンドが見つかりません」と表示された
+      </div>
+      <div class="step">
+        <span class="step-number">解決</span>
+        Node.jsの公式サイトからダウンロードしてインストールします。
+      </div>
+      <div class="os-switch">
+        <div class="os-tabs">
+          <div class="os-tab active" data-os="mac">Mac</div>
+          <div class="os-tab" data-os="win">Windows</div>
+        </div>
+        <div class="os-content">
+          <div class="os-pane active" data-os="mac">
+            <p><strong>方法1: 公式サイトからインストール</strong></p>
+            <ol style="margin-left:20px; line-height:2.2;">
+              <li><a href="https://nodejs.org/ja/" target="_blank">nodejs.org/ja</a> にアクセスします</li>
+              <li>「LTS版（推奨）」のボタンをクリックしてダウンロードします</li>
+              <li>ダウンロードされた .pkg ファイルを開き、インストーラーの指示に従います</li>
+              <li>インストール後、ターミナルを再起動してから <code style="background:#f3f4f6; padding:2px 6px; border-radius:4px;">node --version</code> を実行して確認します</li>
+            </ol>
+            <p style="margin-top:12px;"><strong>方法2: Homebrewを使う（エンジニア向け）</strong></p>
+            <div class="code-block">
+<span class="prompt">brew install node</span>
+            </div>
+          </div>
+          <div class="os-pane" data-os="win">
+            <ol style="margin-left:20px; line-height:2.2;">
+              <li><a href="https://nodejs.org/ja/" target="_blank">nodejs.org/ja</a> にアクセスします</li>
+              <li>「LTS版（推奨）」のボタンをクリックしてダウンロードします</li>
+              <li>ダウンロードされた .msi ファイルを開き、インストーラーの指示に従います</li>
+              <li>インストール後、PowerShellを <strong>新しく開き直して</strong> から <code style="background:#f3f4f6; padding:2px 6px; border-radius:4px;">node --version</code> を実行して確認します</li>
+            </ol>
+            <div class="alert alert-warning" style="margin-top:12px;">
+              <div class="alert-title">注意</div>
+              既に開いていたPowerShellでは認識されません。必ずPowerShellを閉じて開き直してください。
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 問題2-2 -->
+      <h3>npm が動かない / 見つからない</h3>
+      <div class="alert alert-warning">
+        <div class="alert-title">問題</div>
+        <code>npm --version</code> でエラーが出る、または「npm が見つかりません」と表示される
+      </div>
+      <div class="step">
+        <span class="step-number">解決</span>
+        npm は Node.js に同梱されています。Node.js を正しくインストールし直すことで解決する場合がほとんどです。
+      </div>
+      <div class="code-block">
+<span class="output"># まず node のインストール状態を確認します</span>
+<span class="prompt">node --version</span>
+<span class="output">command not found  ← Node.js自体が入っていない場合</span>
+
+<span class="output"># Node.jsが入っているのにnpmが動かない場合</span>
+<span class="prompt">npm --version</span>
+<span class="output">npm: command not found</span>
+
+<span class="output"># 対処: Node.jsを公式サイトから再インストールしてください</span>
+      </div>
+      <div class="alert alert-info">
+        <div class="alert-title">ℹ️ PATHの問題の可能性</div>
+        インストールは成功しているのに <code>command not found</code> と出る場合、環境変数（PATH）の問題の可能性があります。ターミナルを閉じて開き直すか、PCを再起動してみてください。
+      </div>
+
+      <!-- 問題2-3 -->
+      <h3>gemini コマンドが認識されない</h3>
+      <div class="alert alert-warning">
+        <div class="alert-title">問題</div>
+        <code>npm install -g @google/gemini-cli</code> を実行したのに <code>gemini</code> コマンドが使えない
+      </div>
+      <div class="step">
+        <span class="step-number">確認1</span>
+        ターミナル/PowerShellを閉じて開き直してから、再度 <code style="background:#f3f4f6; padding:2px 6px; border-radius:4px;">gemini --version</code> を試してください。
+      </div>
+      <div class="step">
+        <span class="step-number">確認2</span>
+        以下のコマンドでインストールされているか確認します。
+      </div>
+      <div class="code-block">
+<span class="prompt">npm list -g @google/gemini-cli</span>
+<span class="output">/usr/local/lib
+└── @google/gemini-cli@x.x.x  ← 表示されればインストール済み</span>
+      </div>
+      <div class="step">
+        <span class="step-number">確認3</span>
+        インストール済みなのに使えない場合は、PATHの設定が必要な場合があります。以下を試してください。
+      </div>
+      <div class="os-switch">
+        <div class="os-tabs">
+          <div class="os-tab active" data-os="mac">Mac</div>
+          <div class="os-tab" data-os="win">Windows</div>
+        </div>
+        <div class="os-content">
+          <div class="os-pane active" data-os="mac">
+            <div class="code-block">
+<span class="output"># npmのグローバルインストール先を確認</span>
+<span class="prompt">npm root -g</span>
+<span class="output">/usr/local/lib/node_modules  ← この場所を確認</span>
+
+<span class="output"># パスを通す（zshの場合）</span>
+<span class="prompt">echo 'export PATH="$(npm bin -g):$PATH"' >> ~/.zshrc</span>
+<span class="prompt">source ~/.zshrc</span>
+            </div>
+          </div>
+          <div class="os-pane" data-os="win">
+            <div class="code-block">
+<span class="output"># npmのグローバルインストール先を確認</span>
+<span class="ps-prompt">npm root -g</span>
+<span class="output">C:\Users\username\AppData\Roaming\npm\node_modules</span>
+
+<span class="output"># このパスを環境変数のPATHに追加する必要があります</span>
+<span class="output"># 設定 → システム → 詳細設定 → 環境変数 → PATH に追加</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <span class="step-number">最終手段</span>
+        上記で解決しない場合は、Gemini CLI を再インストールします。
+      </div>
+      <div class="code-block">
+<span class="prompt">npm uninstall -g @google/gemini-cli</span>
+<span class="prompt">npm install -g @google/gemini-cli</span>
+<span class="prompt">gemini --version</span>
+      </div>
+    </div>
+
+    <!-- ==================== 3. ログイン関連 ==================== -->
+    <div class="section">
+      <h2>3. ログイン関連</h2>
+
+      <!-- 問題3-1 -->
+      <h3>ログイン画面がブラウザで開かない</h3>
+      <div class="alert alert-warning">
+        <div class="alert-title">問題</div>
+        <code>gemini</code> を実行してもブラウザが開かない、またはエラーが表示される
+      </div>
+      <div class="step">
+        <span class="step-number">確認1</span>
+        デフォルトブラウザが設定されているか確認します。ChromeまたはEdgeをデフォルトブラウザに設定してください。
+      </div>
+      <div class="step">
+        <span class="step-number">確認2</span>
+        ターミナルにURLが表示されている場合は、そのURLをコピーしてブラウザのアドレスバーに貼り付けてください。
+      </div>
+      <div class="code-block">
+<span class="output"># gemini 実行時にURLが表示される場合</span>
+<span class="prompt">gemini</span>
+<span class="output">Please open this URL to authenticate:
+https://accounts.google.com/...  ← このURLをコピーしてブラウザに貼り付ける</span>
+      </div>
+      <div class="step">
+        <span class="step-number">確認3</span>
+        セキュリティソフトや会社のファイアウォールがブラウザの起動をブロックしている可能性があります。IT部門に確認してください。
+      </div>
+
+      <!-- 問題3-2 -->
+      <h3>ブラウザで認証した後にCLIへ戻れない</h3>
+      <div class="alert alert-warning">
+        <div class="alert-title">問題</div>
+        ブラウザでGoogleアカウントにログインしたのに、ターミナルが反応しない
+      </div>
+      <div class="step">
+        <span class="step-number">手順</span>
+        ブラウザで「認証が完了しました」「Authentication successful」などと表示されたら、ブラウザを閉じてターミナルに戻ってください。ターミナルが自動的に続きに進むはずです。
+      </div>
+      <div class="alert alert-info">
+        <div class="alert-title">ℹ️ 待機中の表示について</div>
+        ブラウザで認証中、ターミナルは「Waiting for authentication...」などと表示されて止まっています。これは正常な状態です。ブラウザで認証が完了すると、自動的に次に進みます。
+      </div>
+      <div class="step">
+        <span class="step-number">それでも進まない場合</span>
+        Ctrl + C でキャンセルし、再度 <code style="background:#f3f4f6; padding:2px 6px; border-radius:4px;">gemini</code> を実行してみてください。
+      </div>
+
+      <!-- 問題3-3 -->
+      <h3>権限確認メッセージが表示される</h3>
+      <div class="alert alert-warning">
+        <div class="alert-title">問題</div>
+        ブラウザで「このアプリにアクセスを許可しますか？」などの確認メッセージが表示される
+      </div>
+      <div class="step">
+        <span class="step-number">解決</span>
+        これは正常な動作です。Gemini CLI が Google アカウントへのアクセス許可を求めています。「許可」「Allow」「はい」などのボタンをクリックしてください。
+      </div>
+      <div class="alert alert-info">
+        <div class="alert-title">ℹ️ 安全性について</div>
+        この許可は Gemini CLI の公式ツールによるものです。許可する内容は「Geminiサービスへのアクセス」のみです。会社アカウントを使用する場合は、IT部門のポリシーに従ってください。
+      </div>
+    </div>
+
+    <!-- ==================== 4. ファイル生成関連 ==================== -->
+    <div class="section">
+      <h2>4. ファイル生成関連</h2>
+
+      <!-- 問題4-1 -->
+      <h3>Officeファイル（xlsx, docx, pptx）が開けない</h3>
+      <div class="alert alert-warning">
+        <div class="alert-title">問題</div>
+        生成されたExcel・Word・PowerPointファイルが開けない / Microsoft Officeがインストールされていない
+      </div>
+      <div class="step">
+        <span class="step-number">代替手段1</span>
+        <strong>LibreOffice（無料）を使う</strong><br>
+        <a href="https://ja.libreoffice.org/" target="_blank">libreoffice.org</a> から無料でダウンロード・インストールできます。Excel・Word・PowerPointと互換性があります。
+      </div>
+      <div class="step">
+        <span class="step-number">代替手段2</span>
+        <strong>Googleドライブにアップロードして開く</strong><br>
+        <a href="https://drive.google.com" target="_blank">drive.google.com</a> にアクセスし、生成したファイルをドラッグ&ドロップでアップロードすれば、Google スプレッドシート・ドキュメント・スライドとして開けます。
+      </div>
+      <div class="step">
+        <span class="step-number">代替手段3</span>
+        <strong>Microsoft 365 Online（無料版）を使う</strong><br>
+        <a href="https://www.office.com/" target="_blank">office.com</a> でMicrosoftアカウントにサインインすれば、ブラウザ上でOfficeファイルを開いて編集できます。
+      </div>
+
+      <!-- 問題4-2 -->
+      <h3>PDF出力先がわからない</h3>
+      <div class="alert alert-warning">
+        <div class="alert-title">問題</div>
+        PDFが生成されたはずなのに、どこに保存されたかわからない
+      </div>
+      <div class="step">
+        <span class="step-number">解決</span>
+        特に指定しない限り、コマンドを実行したフォルダ（カレントディレクトリ）に保存されます。以下のコマンドでフォルダ内のファイルを確認してください。
+      </div>
+      <div class="os-switch">
+        <div class="os-tabs">
+          <div class="os-tab active" data-os="mac">Mac</div>
+          <div class="os-tab" data-os="win">Windows</div>
+        </div>
+        <div class="os-content">
+          <div class="os-pane active" data-os="mac">
+            <div class="code-block">
+<span class="output"># 現在のフォルダのPDFファイルを一覧表示</span>
+<span class="prompt">ls *.pdf</span>
+<span class="output">output.pdf  report.pdf  ← 生成されたPDFファイル</span>
+
+<span class="output"># Finderで現在のフォルダを開く</span>
+<span class="prompt">open .</span>
+            </div>
+          </div>
+          <div class="os-pane" data-os="win">
+            <div class="code-block">
+<span class="output"># 現在のフォルダのPDFファイルを一覧表示</span>
+<span class="ps-prompt">dir *.pdf</span>
+<span class="output">output.pdf  report.pdf  ← 生成されたPDFファイル</span>
+
+<span class="output"># エクスプローラーで現在のフォルダを開く</span>
+<span class="ps-prompt">explorer .</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 問題4-3 -->
+      <h3>QRコードの保存先がわからない</h3>
+      <div class="alert alert-warning">
+        <div class="alert-title">問題</div>
+        QRコードが生成されたはずだが、画像ファイルが見つからない
+      </div>
+      <div class="step">
+        <span class="step-number">解決</span>
+        PDFと同様に、実行したフォルダに保存されています。<code style="background:#f3f4f6; padding:2px 6px; border-radius:4px;">ls</code>（Mac）または <code style="background:#f3f4f6; padding:2px 6px; border-radius:4px;">dir</code>（Windows）で確認し、画像ファイル（.png, .jpg）を探してください。
+      </div>
+      <div class="code-block">
+<span class="output"># PNG画像ファイルを確認（Mac）</span>
+<span class="prompt">ls *.png</span>
+<span class="output">qrcode.png  ← QRコードの画像ファイル</span>
+      </div>
+
+      <!-- 問題4-4 -->
+      <h3>生成されたファイルの文字が文字化けする</h3>
+      <div class="alert alert-warning">
+        <div class="alert-title">問題</div>
+        生成されたファイルを開くと、日本語が文字化けして読めない
+      </div>
+      <div class="step">
+        <span class="step-number">確認1</span>
+        ファイルの文字コードを UTF-8 に指定して保存することで解決する場合があります。
+      </div>
+      <div class="step">
+        <span class="step-number">確認2</span>
+        Windowsのメモ帳で開く場合は、「ファイル → 名前を付けて保存」から「文字コード: UTF-8」を選択して保存し直してください。
+      </div>
+      <div class="step">
+        <span class="step-number">確認3</span>
+        ExcelでCSVを開く場合は、直接ダブルクリックではなく「データ → テキストまたはCSVから」からインポートし、文字コードに「65001: Unicode (UTF-8)」を選択してください。
+      </div>
+    </div>
+
+    <!-- ==================== 5. Python・ライブラリ関連 ==================== -->
+    <div class="section">
+      <h2>5. Python / ライブラリ関連</h2>
+
+      <!-- 問題5-1 -->
+      <h3>Python がインストールされていない</h3>
+      <div class="alert alert-warning">
+        <div class="alert-title">問題</div>
+        <code>python --version</code> または <code>python3 --version</code> でエラーになる
+      </div>
+      <div class="step">
+        <span class="step-number">解決</span>
+        <a href="https://www.python.org/downloads/" target="_blank">python.org/downloads</a> から最新版（Python 3.11以上推奨）をダウンロードしてインストールします。
+      </div>
+      <div class="os-switch">
+        <div class="os-tabs">
+          <div class="os-tab active" data-os="mac">Mac</div>
+          <div class="os-tab" data-os="win">Windows</div>
+        </div>
+        <div class="os-content">
+          <div class="os-pane active" data-os="mac">
+            <div class="code-block">
+<span class="output"># インストール後の確認</span>
+<span class="prompt">python3 --version</span>
+<span class="output">Python 3.11.x  ← バージョンが表示されればOK</span>
+
+<span class="output"># Homebrewを使う場合</span>
+<span class="prompt">brew install python3</span>
+            </div>
+          </div>
+          <div class="os-pane" data-os="win">
+            <p style="margin-bottom:12px;"><strong>重要: インストール時に「Add Python to PATH」にチェックを入れてください</strong></p>
+            <div class="code-block">
+<span class="output"># インストール後の確認（PowerShell）</span>
+<span class="ps-prompt">python --version</span>
+<span class="output">Python 3.11.x  ← バージョンが表示されればOK</span>
+            </div>
+            <div class="alert alert-warning" style="margin-top:8px;">
+              <div class="alert-title">注意</div>
+              Windowsでは <code>python</code> コマンドで起動します（<code>python3</code> ではない場合があります）。
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 問題5-2 -->
+      <h3>pip でライブラリのインストールが失敗する</h3>
+      <div class="alert alert-warning">
+        <div class="alert-title">問題</div>
+        <code>pip install pandas openpyxl</code> などのコマンドでエラーが出る
+      </div>
+      <div class="step">
+        <span class="step-number">確認1</span>
+        pip自体が最新版かどうか確認・更新します。
+      </div>
+      <div class="code-block">
+<span class="prompt">pip install --upgrade pip</span>
+      </div>
+      <div class="step">
+        <span class="step-number">確認2</span>
+        Macの場合、<code>pip3</code> を使う必要がある場合があります。
+      </div>
+      <div class="code-block">
+<span class="prompt">pip3 install pandas openpyxl matplotlib qrcode reportlab python-docx python-pptx</span>
+      </div>
+      <div class="step">
+        <span class="step-number">確認3</span>
+        会社PCでプロキシの設定が必要な場合があります。IT部門に確認し、プロキシの設定を教えてもらってください。
+      </div>
+      <div class="step">
+        <span class="step-number">確認4</span>
+        権限エラーが出る場合は <code>--user</code> オプションを追加します。
+      </div>
+      <div class="code-block">
+<span class="prompt">pip install --user pandas openpyxl</span>
+      </div>
+    </div>
+
+    <!-- ==================== 6. セキュリティ関連 ==================== -->
+    <div class="section">
+      <h2>6. セキュリティ関連</h2>
+
+      <!-- 問題6-1 -->
+      <h3>会社PCでインストールが制限されている</h3>
+      <div class="alert alert-danger">
+        <div class="alert-title">問題</div>
+        ソフトウェアのインストール時に「管理者権限が必要です」「組織のポリシーにより制限されています」と表示される
+      </div>
+      <div class="step">
+        <span class="step-number">対処1</span>
+        <strong>情報システム部門（IT部門）に連絡する</strong><br>
+        「Gemini CLI を使った業務効率化研修のため、Node.js と Python のインストール許可が必要です」と伝えてください。
+      </div>
+      <div class="step">
+        <span class="step-number">対処2</span>
+        <strong>個人PCで参加する</strong><br>
+        会社PCへのインストールが難しい場合は、個人のPCで参加することを検討してください。演習データはすべてサンプルデータのため、個人PCでも安全に実施できます。
+      </div>
+      <div class="alert alert-info" style="margin-top:12px;">
+        <div class="alert-title">ℹ️ 事前確認のお願い</div>
+        当日に「インストールできない」と気づいてしまうと、対応に時間がかかります。<strong>受講申込後すぐに</strong>IT部門へ確認することをお勧めします。
+      </div>
+
+      <!-- 問題6-2 -->
+      <h3>Windowsで「スクリプトの実行が無効」エラーが出る</h3>
+      <div class="alert alert-warning">
+        <div class="alert-title">問題</div>
+        PowerShellで npm や gemini コマンドを実行したとき、「このシステムではスクリプトの実行が無効になっています」と表示される
+      </div>
+      <div class="step">
+        <span class="step-number">確認</span>
+        これはPowerShellのセキュリティ設定（実行ポリシー）の問題です。以下の手順で設定を変更できます。
+      </div>
+      <div class="step">
+        <span class="step-number">解決</span>
+        PowerShellを<strong>管理者として実行</strong>し、以下のコマンドを入力してください。
+      </div>
+      <div class="code-block">
+<span class="output"># 現在の実行ポリシーを確認</span>
+<span class="ps-prompt">Get-ExecutionPolicy</span>
+<span class="output">Restricted  ← この場合は変更が必要</span>
+
+<span class="output"># 実行ポリシーを変更（管理者権限が必要）</span>
+<span class="ps-prompt">Set-ExecutionPolicy RemoteSigned -Scope CurrentUser</span>
+<span class="output">実行ポリシーを変更しますか？
+  Y  ← Y を入力してEnterキーを押す</span>
+
+<span class="output"># 変更を確認</span>
+<span class="ps-prompt">Get-ExecutionPolicy</span>
+<span class="output">RemoteSigned  ← これで完了</span>
+      </div>
+      <div class="alert alert-info">
+        <div class="alert-title">ℹ️ RemoteSigned について</div>
+        <code>RemoteSigned</code> は「インターネットからダウンロードしたスクリプトには署名が必要だが、ローカルで作成したスクリプトは実行可能」という設定です。Node.jsの実行に必要な最低限の変更です。
+      </div>
+
+      <!-- 問題6-3 -->
+      <h3>AIに任せすぎることへの不安</h3>
+      <div class="alert alert-info">
+        <div class="alert-title">問題</div>
+        AIが生成したコードやファイルをそのまま使っていいか不安。ミスが起きた場合の責任が心配。
+      </div>
+      <div class="step">
+        <span class="step-number">考え方</span>
+        AIが生成した内容は、必ず人間が確認してから使用することが重要です。以下の点を心がけてください。
+      </div>
+      <ul style="margin-left:24px; line-height:2.4; margin-top:12px;">
+        <li><strong>実行前に内容を確認する</strong>: AIが生成したコマンドやコードは、実行前に何をするか確認してください</li>
+        <li><strong>バックアップを取る</strong>: 重要なファイルを操作する前に必ずバックアップを作成してください</li>
+        <li><strong>確認プロンプトを使う</strong>: Gemini CLIに「何をするか教えてから実行して」「ステップごとに確認しながら進めて」と指示すると安全です</li>
+        <li><strong>演習フォルダのみで作業する</strong>: 本講座では専用の練習フォルダ内でのみ操作します</li>
+        <li><strong>不安な操作は実行しない</strong>: わからないことは必ず講師に確認してから進めてください</li>
+      </ul>
+      <div class="alert alert-success" style="margin-top:16px;">
+        <div class="alert-title">安心してください</div>
+        本講座の演習はすべてサンプルデータで行います。実際の業務データや重要なファイルには一切触りません。
+      </div>
+    </div>
+
+    <!-- ページナビ -->
+    
+
+
+  <!-- Footer -->
+      </div>
+    </div>
+
+    <div class="page-section" id="section-lesson01">
+      <div class="section-banner">
+        <h2>第1部：Gemini CLI の起動と基本操作</h2>
+        <p>AIエージェントを呼び出して日本語で指示を出す</p>
+      </div>
+      <div class="container">
+
+      <h1>第1部：Gemini CLI の起動と基本操作</h1>
+      <p class="subtitle">AIエージェントを呼び出して、日本語で指示を出す基本をマスターしよう</p>
+      <span class="badge">所要時間：約30分 | 難易度：入門</span>
+    <!-- セクション1：Gemini CLI とは -->
+    <section class="section">
+      <h2>1. Gemini CLI とは何か</h2>
+      <p>
+        <strong>Gemini CLI（ジェミナイ・シーエルアイ）</strong>は、Google が提供する AI アシスタント「Gemini」を、あなたの PC 上のターミナル（黒い画面）や PowerShell から直接呼び出せるツールです。
+      </p>
+      <p style="margin-top:12px;">
+        ブラウザを開かなくても、画面の前に AI が常駐してくれているイメージで使います。日本語で「このフォルダを整理して」「Excel ファイルを作って」と指示するだけで、AI が実際に作業を進めてくれます。
+      </p>
+
+      <h3>Gemini CLI でできること</h3>
+      <ul style="margin-left:20px; line-height:2.2;">
+        <li><strong>ファイル・フォルダの整理</strong>：散らかったファイルを分類・リネーム・移動</li>
+        <li><strong>資料の作成</strong>：Excel・Word・PowerPoint ファイルを自動生成</li>
+        <li><strong>データの分析・集計</strong>：CSV や Excel のデータを読み込んで分析</li>
+        <li><strong>PDF や QR コードの出力</strong>：作った資料を実務で使える形に変換</li>
+        <li><strong>テキスト作成・要約</strong>：報告書や議事録の草稿を作成</li>
+      </ul>
+
+      <div class="alert alert-info" style="margin-top:20px;">
+        <div class="alert-title">GitHub は不要・開発者でなくても使えます</div>
+        <p>Gemini CLI は「エンジニア向けのツール」と思われがちですが、普段 PC を使っている方であれば誰でも使えます。コードを書く必要はありません。日本語で話しかけるだけです。</p>
+      </div>
+    </section>
+
+    <!-- セクション2：起動方法 -->
+    <section class="section">
+      <h2>2. 起動方法（セットアップ済みの前提）</h2>
+      <p>Node.js と Gemini CLI のインストールはすでに完了しているものとして進めます。まだの方は「<a href="#section-choose-os">OS 別セットアップ</a>」を先にご覧ください。</p>
+
+      <h3>ターミナル（Mac）または PowerShell（Windows）を開く</h3>
+      <div class="os-switch">
+        <div class="os-tabs">
+          <button class="os-tab active" onclick="switchTab(this, 'os-mac-launch')">Mac（ターミナル）</button>
+          <button class="os-tab" onclick="switchTab(this, 'os-win-launch')">Windows（PowerShell）</button>
+        </div>
+        <div class="os-content">
+          <div class="os-pane active" id="os-mac-launch">
+            <ol style="margin-left:20px; line-height:2.2;">
+              <li><strong>Command (⌘) + Space</strong> を押して Spotlight 検索を開く</li>
+              <li>「ターミナル」と入力して Enter を押す</li>
+              <li>黒い画面が開いたら準備完了</li>
+            </ol>
+            <div class="code-block"><span class="prompt">gemini</span>
+</div>
+            <p style="margin-top:8px; color:#6b7280; font-size:0.9em;">上記のコマンドを入力して Enter を押してください。</p>
+          </div>
+          <div class="os-pane" id="os-win-launch">
+            <ol style="margin-left:20px; line-height:2.2;">
+              <li>スタートボタンを右クリック →「Windows PowerShell」または「ターミナル」を選ぶ</li>
+              <li>青い画面または黒い画面が開いたら準備完了</li>
+            </ol>
+            <div class="code-block"><span class="ps-prompt">gemini</span>
+</div>
+            <p style="margin-top:8px; color:#6b7280; font-size:0.9em;">上記のコマンドを入力して Enter を押してください。</p>
+          </div>
+        </div>
+      </div>
+
+      <h3>起動後の画面の見方</h3>
+      <div class="code-block"><span class="output">╔═══════════════════════════════════════════╗
+║          Gemini CLI  v1.x.x              ║
+╚═══════════════════════════════════════════╝
+
+✓ Logged in as: yourname@gmail.com
+✓ Model: gemini-2.5-pro
+
+> （ここに入力します）</span>
+</div>
+      <ul style="margin-left:20px; line-height:2.2; margin-top:12px;">
+        <li>「Logged in as」の後に自分のメールアドレスが表示されていれば、ログイン成功です</li>
+        <li>「&gt;」（プロンプト）の後が入力欄です。ここに日本語で指示を入力します</li>
+        <li>バージョン番号は環境によって異なります</li>
+      </ul>
+    </section>
+
+    <!-- セクション3：基本的な使い方 -->
+    <section class="section">
+      <h2>3. 基本的な使い方</h2>
+      <p>Gemini CLI は、普通の日本語でそのまま指示を出せます。難しいコマンドを覚える必要はありません。</p>
+
+      <h3>まず挨拶してみよう</h3>
+      <p>最初に、Gemini が正常に動作しているか確認してみましょう。</p>
+
+      <div class="prompt-example">
+        <span class="label">入力するプロンプト</span>
+        <p>こんにちは、今日は何を手伝ってくれますか？</p>
+      </div>
+
+      <p>Gemini はこんな返答をしてくれます：</p>
+      <div class="code-block"><span class="output">こんにちは！私は Gemini CLI です。本日はどのようなことでお手伝いできますか？
+
+主にできることは以下の通りです：
+・ファイルやフォルダの整理・作成・移動
+・Excel、Word、PowerPoint ファイルの生成
+・データの分析・集計・グラフ作成
+・PDF の作成、QR コードの生成
+・テキストの作成・要約・翻訳
+
+お気軽にご指示ください！</span>
+</div>
+
+      <h3>応答の見方</h3>
+      <ul style="margin-left:20px; line-height:2.2;">
+        <li>Gemini からの返答は「&gt;」の後に表示されます</li>
+        <li>ファイル操作を伴う指示では、実行前に確認画面が出ます（後述）</li>
+        <li>長い返答はスクロールして読めます</li>
+      </ul>
+
+      <h3>Gemini CLI の終了方法</h3>
+      <div class="code-block"><span class="prompt">/quit</span>
+</div>
+      <p>または <code>/exit</code> と入力するか、<strong>Ctrl + C</strong> を押しても終了できます。</p>
+    </section>
+
+    <!-- セクション4：AIエージェントとしての指示の出し方 -->
+    <section class="section">
+      <h2>4. AI エージェントとしての指示の出し方</h2>
+      <p>
+        Gemini CLI はただ質問に答えるだけでなく、<strong>実際にファイルを作ったり、フォルダを整理したり</strong>することができます。このような「手を動かして作業してくれる AI」を「<strong>AI エージェント</strong>」と呼びます。
+      </p>
+
+      <h3>指示のポイント：「具体的に」伝える</h3>
+      <p>曖昧な指示よりも、具体的な指示を出した方が Gemini は的確に動いてくれます。</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>指示の種類</th>
+              <th>例文</th>
+              <th>問題点</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>曖昧な指示</strong></td>
+              <td>「ファイルを整理して」</td>
+              <td>どのフォルダか、どんな基準で整理するかが不明</td>
+            </tr>
+            <tr>
+              <td><strong>明確な指示</strong></td>
+              <td>「デスクトップの gemini-workshop フォルダ内のファイルを用途別に整理して」</td>
+              <td>問題なし。対象と方法が明確</td>
+            </tr>
+            <tr>
+              <td><strong>曖昧な指示</strong></td>
+              <td>「レポートを作って」</td>
+              <td>何のレポートか、形式は何か、内容は何かが不明</td>
+            </tr>
+            <tr>
+              <td><strong>明確な指示</strong></td>
+              <td>「5年間のセミナー参加者データをもとに、Word 形式で実績報告書を作って」</td>
+              <td>問題なし。内容・形式が明確</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>実際にフォルダの中身を確認してみよう</h3>
+      <div class="prompt-example">
+        <span class="label">入力するプロンプト</span>
+        <p>デスクトップにある gemini-workshop フォルダの中身を確認してください</p>
+      </div>
+
+      <p>Gemini はフォルダの中身を一覧表示してくれます。この操作ではファイルを変更しないので、安心して試せます。</p>
+    </section>
+
+    <!-- セクション5：権限確認の仕組み -->
+    <section class="section">
+      <h2>5. 権限確認の仕組み</h2>
+      <p>
+        Gemini CLI がファイルの作成・移動・削除などを行おうとするとき、<strong>必ず実行前に確認画面</strong>が表示されます。これは「本当にやっていいですか？」と聞いてくれる安全装置です。
+      </p>
+
+      <div class="code-block"><span class="output">📁 以下の操作を実行します：
+   フォルダを作成: /Users/yourname/Desktop/gemini-workshop/整理済み/
+
+実行してよいですか？ [y/n]: </span>
+</div>
+
+      <ul style="margin-left:20px; line-height:2.2; margin-top:12px;">
+        <li><strong>y（または yes）を入力して Enter</strong>：操作を許可して実行</li>
+        <li><strong>n（または no）を入力して Enter</strong>：操作を中止</li>
+        <li>内容をよく読んでから判断してください</li>
+      </ul>
+
+      <div class="alert alert-danger" style="margin-top:16px;">
+        <div class="alert-title">注意：むやみに全部「y」にしない</div>
+        <p>確認画面が出るたびに内容を確認せず「y」を押し続けると、意図しないファイルの削除や上書きが起きる可能性があります。<strong>必ず内容を読んでから判断</strong>してください。特に「削除」「上書き」の操作は慎重に。</p>
+      </div>
+    </section>
+
+    <!-- セクション6：よく使う操作 -->
+    <section class="section">
+      <h2>6. よく使う操作パターン</h2>
+      <p>以下は Gemini CLI でよく使う操作の例です。コピーして使ってみてください。</p>
+
+      <h3>フォルダの中身を確認する</h3>
+      <div class="prompt-example">
+        <span class="label">プロンプト例</span>
+        <p>このフォルダの中にあるファイルを一覧で教えてください</p>
+      </div>
+      <div class="prompt-example">
+        <span class="label">プロンプト例</span>
+        <p>デスクトップの gemini-workshop フォルダの構成をツリー形式で表示してください</p>
+      </div>
+
+      <h3>新しいフォルダを作成する</h3>
+      <div class="prompt-example">
+        <span class="label">プロンプト例</span>
+        <p>gemini-workshop フォルダの中に「成果物」という名前のフォルダを作ってください</p>
+      </div>
+
+      <h3>簡単なテキストファイルを作成する</h3>
+      <div class="prompt-example">
+        <span class="label">プロンプト例</span>
+        <p>「本日の研修メモ」というタイトルで、今日の日付と受講内容を箇条書きにしたテキストファイルを作ってください。ファイル名は memo.txt にしてください</p>
+      </div>
+    </section>
+
+    <!-- セクション7：注意点 -->
+    <section class="section">
+      <h2>7. 注意点</h2>
+
+      <div class="step">
+        <span class="step-number">1</span>
+        <strong>全自動ではありません：確認しながら進める</strong>
+        <p style="margin-top:8px;">Gemini CLI は何でも自動でやってくれるわけではありません。ファイル操作の前には必ず確認が入ります。また、指示が曖昧な場合は「どういう意味ですか？」と聞き返してくることもあります。</p>
+      </div>
+
+      <div class="step">
+        <span class="step-number">2</span>
+        <strong>実務データは使わない（この講座では）</strong>
+        <p style="margin-top:8px;">今日の演習では、あらかじめ用意した<strong>サンプルデータ</strong>のみを使います。顧客情報・社内機密・個人情報などの実務データは入力しないでください。</p>
+      </div>
+
+      <div class="step">
+        <span class="step-number">3</span>
+        <strong>大事なファイルは先にバックアップ</strong>
+        <p style="margin-top:8px;">実務でも使う際は、Gemini CLI で操作する前に必ずファイルのバックアップを取ってください。「整理してください」と指示すると、実際にファイルが移動・変更されます。</p>
+      </div>
+
+      <div class="alert alert-warning" style="margin-top:8px;">
+        <div class="alert-title">AI の回答を鵜呑みにしない</div>
+        <p>Gemini CLI の回答は参考情報です。特にデータ分析結果や予測数値は、必ず自分で内容を確認してから使用してください。誤った情報が含まれる場合もあります。</p>
+      </div>
+    </section>
+
+    <!-- セクション8：練習課題 -->
+    <section class="section">
+      <h2>8. 練習課題：自己紹介テキストを作らせてみよう</h2>
+      <p>
+        Gemini CLI に実際に指示を出してみましょう。以下のプロンプトをコピーして貼り付けてみてください。
+      </p>
+
+      <div class="step">
+        <span class="step-number">1</span>
+        <strong>Gemini CLI を起動する</strong>
+        <p style="margin-top:8px;">ターミナル（Mac）または PowerShell（Windows）を開いて <code>gemini</code> と入力します。</p>
+      </div>
+
+      <div class="step">
+        <span class="step-number">2</span>
+        <strong>以下のプロンプトを入力する</strong>
+      </div>
+
+      <div class="prompt-example">
+        <span class="label">練習プロンプト</span>
+        <p>自己紹介文を書いて intro.txt として保存してください。内容は以下の通りです：名前は「研修参加者」、所属部署は「営業部」、得意なこと「資料作成・データ整理」、Gemini CLI に期待すること「日常業務の効率化」</p>
+      </div>
+
+      <div class="step">
+        <span class="step-number">3</span>
+        <strong>確認画面が出たら内容を読んでから「y」を入力する</strong>
+        <p style="margin-top:8px;">Gemini が「intro.txt を作成してよいですか？」と聞いてきます。内容を確認してから許可しましょう。</p>
+      </div>
+
+      <div class="step">
+        <span class="step-number">4</span>
+        <strong>作成されたファイルを確認する</strong>
+      </div>
+
+      <div class="prompt-example">
+        <span class="label">確認プロンプト</span>
+        <p>作成した intro.txt の内容を表示してください</p>
+      </div>
+
+      <div class="alert alert-success" style="margin-top:16px;">
+        <div class="alert-title">ここまでできたら第1部は完了です！</div>
+        <p>Gemini CLI の起動・基本操作・ファイル作成の流れを体験できました。次の第2部では、フォルダ整理のハンズオンに入ります。</p>
+      </div>
+    </section>
+      </div>
+    </div>
+
+    <div class="page-section" id="section-lesson02">
+      <div class="section-banner">
+        <h2>第2部：フォルダ整理ハンズオン</h2>
+        <p>散らかったフォルダをAIに整理させる実践演習</p>
+      </div>
+      <div class="container">
+
+      <h1>第2部：フォルダ整理ハンズオン</h1>
+      <p class="subtitle">散らかったサンプルフォルダを AI に整理させる実践演習</p>
+      <span class="badge">所要時間：約40分 | 難易度：入門〜初級</span>
+    <!-- セクション1：演習の説明 -->
+    <section class="section">
+      <h2>1. この演習でやること</h2>
+      <p>
+        この演習では、あらかじめ用意した <strong>sample_data_messy</strong> フォルダを使います。このフォルダには、わざとバラバラなファイル名にしたサンプルファイルが入っています。
+      </p>
+
+      <div class="alert alert-info">
+        <div class="alert-title">sample_data_messy フォルダについて</div>
+        <p>研修用に準備したサンプルデータです。実際の業務データは使いません。ファイル名がバラバラで、日付の書き方・用途・拡張子がルールなく混在しています。これを Gemini CLI に整理させましょう。</p>
+      </div>
+
+      <h3>演習の流れ</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ステップ</th>
+              <th>内容</th>
+              <th>目的</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1. 現状把握</td>
+              <td>どんなファイルがあるかを確認する</td>
+              <td>問題を整理する</td>
+            </tr>
+            <tr>
+              <td>2. 整理方針の提案</td>
+              <td>AI にフォルダ構成と命名ルールを考えさせる</td>
+              <td>計画を立てる</td>
+            </tr>
+            <tr>
+              <td>3. 安全な実行</td>
+              <td>変更予定を確認してから実行</td>
+              <td>事故を防ぐ</td>
+            </tr>
+            <tr>
+              <td>4. 整理の実行</td>
+              <td>提案どおりに整理を実行</td>
+              <td>実際に作業</td>
+            </tr>
+            <tr>
+              <td>5. レビュー</td>
+              <td>整理結果を確認・改善点を聞く</td>
+              <td>品質を高める</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- セクション2：現状把握 -->
+    <section class="section">
+      <h2>2. 現状把握：何がどこにあるか確認する</h2>
+      <p>
+        整理を始める前に、まず AI に「今何があるか」を確認させます。これが実務でも一番大切な最初のステップです。
+      </p>
+
+      <div class="step">
+        <span class="step-number">1</span>
+        <strong>ファイル一覧を出してもらう</strong>
+      </div>
+
+      <div class="prompt-example">
+        <span class="label">入力するプロンプト</span>
+        <p>sample_data_messy フォルダの中身を確認して、どんなファイルがあるか一覧にしてください</p>
+      </div>
+
+      <p>Gemini はこんな回答をしてくれます：</p>
+      <div class="code-block"><span class="output">sample_data_messy フォルダの中身（全34ファイル）：
+
+01_seminar_report_2020.xlsx
+2021_seminar.xlsx
+セミナー報告書_2022.xlsx
+report2023.xlsx
+seminar_2024_final_v2.xlsx
+集客データ_2020.csv
+2021集客.csv
+seminar_data_2022.csv
+...（以下省略）</span>
+</div>
+
+      <div class="step">
+        <span class="step-number">2</span>
+        <strong>問題点を分析させる</strong>
+      </div>
+
+      <div class="prompt-example">
+        <span class="label">入力するプロンプト</span>
+        <p>ファイル名のばらつきを分析して、問題点を指摘してください</p>
+      </div>
+
+      <p>AI は以下のような問題点を指摘してくれます：</p>
+      <div class="code-block"><span class="output">ファイル名の問題点を分析しました：
+
+【問題1】日付の書き方がバラバラ
+  - 「2020」「2021_」「_2022」「2024」など、位置と区切り記号が不統一
+
+【問題2】言語が混在している
+  - 日本語：「セミナー報告書_2022.xlsx」
+  - 英語：「seminar_data_2022.csv」
+  - 混在：「report2023.xlsx」
+
+【問題3】バージョン管理が不明確
+  - 「final」「v2」「最終版」など表記が統一されていない
+
+【問題4】用途がファイル名からわからないものがある
+  - 「data_03.csv」「temp.xlsx」など内容不明のファイルが6件あります
+
+改善策を提案しましょうか？</span>
+</div>
+    </section>
+
+    <!-- セクション3：整理方針の提案 -->
+    <section class="section">
+      <h2>3. 整理方針の提案：AI に考えさせる</h2>
+      <p>
+        問題点が把握できたら、次は AI に整理方針を考えてもらいます。フォルダ構成と命名ルールの両方を提案させましょう。
+      </p>
+
+      <div class="prompt-example">
+        <span class="label">入力するプロンプト</span>
+        <p>これらのファイルを用途別に整理する方針を提案してください。フォルダ構成と命名ルールも考えてください</p>
+      </div>
+
+      <p>AI からの提案例：</p>
+      <div class="code-block"><span class="output">整理方針を提案します。
+
+【フォルダ構成案】
+sample_data_clean/
+├── 01_集客データ/        ← CSVデータファイル
+├── 02_報告書/            ← Excel・Word の報告書
+├── 03_提案資料/          ← PowerPoint スライド
+├── 04_画像/              ← 写真・グラフ画像
+└── 99_未分類/            ← 判断できないファイル
+
+【命名ルール案】
+形式：YYYY-MM_用途_内容.拡張子
+
+例：
+  2024-03_集客データ_セミナー参加者.csv
+  2023-06_報告書_上半期実績.xlsx
+  2024-01_提案資料_来期戦略.pptx
+
+この方針でよろしいでしょうか？</span>
+</div>
+
+      <div class="prompt-example">
+        <span class="label">さらに詳しく確認したい場合のプロンプト</span>
+        <p>年月・用途・版数を含む命名ルールを提案してください。バージョン管理も含めてください</p>
+      </div>
+
+      <div class="alert alert-info" style="margin-top:16px;">
+        <div class="alert-title">提案を見直したいとき</div>
+        <p>AI の提案が自分のイメージと違う場合は、「フォルダ名を日本語にしてください」「もっとシンプルにしてください」など、追加指示を出せばすぐに修正してくれます。</p>
+      </div>
+    </section>
+
+    <!-- セクション4：安全な実行 -->
+    <section class="section">
+      <h2>4. 安全な実行：必ず「変更予定の確認」をしてから</h2>
+      <p>
+        整理を実行する前に、<strong>必ず「どのファイルをどこに移動するか」を一覧で表示させてください</strong>。これを確認してから実行するのがプロのやり方です。
+      </p>
+
+      <div class="alert alert-warning">
+        <div class="alert-title">重要：実行前に変更予定を必ず確認する</div>
+        <p>「整理して」とだけ指示すると、AI がいきなりファイルを移動し始める場合があります。意図しない場所にファイルが移ってしまうリスクがあるため、<strong>必ず事前に変更内容の一覧を表示させてから実行</strong>してください。</p>
+      </div>
+
+      <div class="step">
+        <span class="step-number">1</span>
+        <strong>変更予定の一覧を先に見せてもらう</strong>
+      </div>
+
+      <div class="prompt-example">
+        <span class="label">入力するプロンプト</span>
+        <p>実行前に、どのファイルをどこに移動するか一覧で見せてください。実行はまだしないでください</p>
+      </div>
+
+      <div class="code-block"><span class="output">移動予定の一覧（実行前確認）：
+
+移動元                          → 移動先
+01_seminar_report_2020.xlsx    → 02_報告書/2020-01_報告書_セミナー実績.xlsx
+2021_seminar.xlsx              → 02_報告書/2021-01_報告書_セミナー実績.xlsx
+セミナー報告書_2022.xlsx        → 02_報告書/2022-01_報告書_セミナー実績.xlsx
+集客データ_2020.csv             → 01_集客データ/2020-01_集客データ_参加者.csv
+...（全34件）
+
+これでよろしいですか？「実行してください」と言えば進めます。</span>
+</div>
+
+      <div class="step">
+        <span class="step-number">2</span>
+        <strong>元データを残したままコピー側で整理する</strong>
+      </div>
+
+      <div class="prompt-example">
+        <span class="label">入力するプロンプト</span>
+        <p>元データは残して、コピー側で整理してください。sample_data_messy フォルダはそのままにして、sample_data_clean フォルダを新しく作り、そちらに整理してください</p>
+      </div>
+
+      <div class="alert alert-success">
+        <div class="alert-title">元データを残すのがベストプラクティス</div>
+        <p>「移動」ではなく「コピーして整理」することで、万が一整理方法が間違っていても元のファイルが残ります。整理後に元フォルダが不要になったら、その時点で削除すれば安心です。</p>
+      </div>
+    </section>
+
+    <!-- セクション5：整理の実行 -->
+    <section class="section">
+      <h2>5. 整理の実行</h2>
+      <p>変更予定を確認し、問題がなければ実行を指示します。</p>
+
+      <div class="step">
+        <span class="step-number">1</span>
+        <strong>フォルダを作成してファイルを整理する</strong>
+      </div>
+
+      <div class="prompt-example">
+        <span class="label">入力するプロンプト</span>
+        <p>提案した構成でフォルダを作成し、ファイルをコピーして整理してください</p>
+      </div>
+
+      <p>Gemini が確認を求めてきます：</p>
+      <div class="code-block"><span class="output">以下の操作を実行します：
+1. sample_data_clean/ フォルダを作成
+2. 01_集客データ/ フォルダを作成
+3. 02_報告書/ フォルダを作成
+4. 03_提案資料/ フォルダを作成
+5. 04_画像/ フォルダを作成
+6. 99_未分類/ フォルダを作成
+7. ファイルをコピーして整理（全34件）
+
+実行してよいですか？ [y/n]: </span>
+</div>
+
+      <p>内容を確認して <kbd>y</kbd> を入力します。</p>
+
+      <div class="step">
+        <span class="step-number">2</span>
+        <strong>整理結果を確認する</strong>
+      </div>
+
+      <div class="prompt-example">
+        <span class="label">入力するプロンプト</span>
+        <p>整理結果をツリー形式で表示してください</p>
+      </div>
+
+      <div class="code-block"><span class="output">sample_data_clean/
+├── 01_集客データ/
+│   ├── 2020-01_集客データ_参加者.csv
+│   ├── 2021-01_集客データ_参加者.csv
+│   ├── 2022-01_集客データ_参加者.csv
+│   ├── 2023-01_集客データ_参加者.csv
+│   └── 2024-01_集客データ_参加者.csv
+├── 02_報告書/
+│   ├── 2020-01_報告書_セミナー実績.xlsx
+│   ├── 2021-01_報告書_セミナー実績.xlsx
+│   ├── 2022-01_報告書_セミナー実績.xlsx
+│   ├── 2023-01_報告書_セミナー実績.xlsx
+│   └── 2024-01_報告書_セミナー実績.xlsx
+├── 03_提案資料/
+│   └── 2024-01_提案資料_来期戦略.pptx
+├── 04_画像/
+│   └── seminar_photo_2024.jpg
+└── 99_未分類/
+    └── data_03.csv
+
+整理完了：34ファイル中33件を分類。1件は内容不明のため99_未分類に格納しました。</span>
+</div>
+    </section>
+
+    <!-- セクション6：レビュー -->
+    <section class="section">
+      <h2>6. レビュー：理由を聞いて理解を深める</h2>
+      <p>
+        整理が完了したら、AI に「なぜそう分類したか」を説明してもらいましょう。理由を知ることで、次回以降自分でルールを作るときの参考になります。
+      </p>
+
+      <div class="prompt-example">
+        <span class="label">入力するプロンプト</span>
+        <p>なぜこの分類にしたか説明してください。特に「99_未分類」にしたファイルについて教えてください</p>
+      </div>
+
+      <div class="prompt-example">
+        <span class="label">入力するプロンプト</span>
+        <p>この整理方法の改善点はありますか？もっとよくする方法があれば提案してください</p>
+      </div>
+
+      <p>AI からの改善提案例：</p>
+      <div class="code-block"><span class="output">改善点の提案：
+
+1. 年度別サブフォルダの追加
+   現在は01_集客データ/の直下にすべての年のファイルがあります。
+   ファイル数が増えてきたら年度別に分けることをお勧めします。
+   例：01_集客データ/2024/
+
+2. README.txt の設置
+   各フォルダに「このフォルダには何が入っているか」を書いた
+   README.txt を置くと、他の人が見たときにわかりやすくなります。
+
+3. 定期メンテのスケジュール設定
+   毎月1回など、このフォルダを見直す日程を決めておくと
+   散らかり防止になります。
+
+実施しましょうか？</span>
+</div>
+    </section>
+
+    <!-- セクション7：理想的な整理後フォルダ構成 -->
+    <section class="section">
+      <h2>7. 参考：理想的な整理後フォルダ構成</h2>
+      <p>
+        講座で用意している <strong>sample_data_clean</strong> フォルダが、整理後の完成形の参考例です。以下の構成になっています。
+      </p>
+
+      <div class="code-block"><span class="output">sample_data_clean/
+├── 00_README.txt                          ← フォルダ全体の説明
+├── 01_集客データ/
+│   ├── 2020-01_集客データ_セミナー参加者.csv
+│   ├── 2021-01_集客データ_セミナー参加者.csv
+│   ├── 2022-01_集客データ_セミナー参加者.csv
+│   ├── 2023-01_集客データ_セミナー参加者.csv
+│   └── 2024-01_集客データ_セミナー参加者.csv
+├── 02_報告書/
+│   ├── 2020-01_報告書_セミナー実績.xlsx
+│   ├── 2021-01_報告書_セミナー実績.xlsx
+│   ├── 2022-01_報告書_セミナー実績.xlsx
+│   ├── 2023-01_報告書_セミナー実績.xlsx
+│   └── 2024-01_報告書_セミナー実績.xlsx
+├── 03_提案資料/
+│   └── 2024-01_提案資料_来期セミナー戦略.pptx
+├── 04_画像/
+│   ├── seminar_photo_2023.jpg
+│   └── seminar_photo_2024.jpg
+└── 99_未分類/
+    └── 分類できなかったファイルをここに格納</span>
+</div>
+
+      <h3>命名ルールのポイント</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>要素</th>
+              <th>ルール</th>
+              <th>例</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>日付</td>
+              <td>YYYY-MM（年と月のみ。日は省略可）</td>
+              <td>2024-03</td>
+            </tr>
+            <tr>
+              <td>用途</td>
+              <td>日本語で簡潔に（2〜4文字）</td>
+              <td>報告書・集客データ・提案資料</td>
+            </tr>
+            <tr>
+              <td>内容</td>
+              <td>中身がわかるキーワード</td>
+              <td>セミナー参加者・上半期実績</td>
+            </tr>
+            <tr>
+              <td>バージョン</td>
+              <td>修正がある場合は末尾に _v2・_v3</td>
+              <td>2024-03_報告書_実績_v2.xlsx</td>
+            </tr>
+            <tr>
+              <td>区切り文字</td>
+              <td>アンダースコア（_）に統一</td>
+              <td>スペース・ハイフンは使わない</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="alert alert-success" style="margin-top:16px;">
+        <div class="alert-title">第2部の演習が完了したら</div>
+        <p>フォルダ整理のコツをつかめましたか？次の第3部では、Excel・Word・PowerPoint ファイルをゼロから作成します。演習で使うデータも自分で AI に作ってもらいます。</p>
+      </div>
+    </section>
+      </div>
+    </div>
+
+    <div class="page-section" id="section-lesson03">
+      <div class="section-banner">
+        <h2>第3部：Excel・Word・PowerPoint の作成</h2>
+        <p>セミナー集客データをもとにOfficeファイルを作成</p>
+      </div>
+      <div class="container">
+
+      <h1>第3部：Excel・Word・PowerPoint の作成</h1>
+      <p class="subtitle">5年間のセミナー集客データを AI に作らせ、分析・提案資料の土台を作ろう</p>
+      <span class="badge">所要時間：約50分 | 難易度：初級</span>
+    <!-- セクション1：概要説明 -->
+    <section class="section">
+      <h2>1. この部でやること</h2>
+      <p>
+        Gemini CLI から Python スクリプトを経由して、<strong>Excel・Word・PowerPoint の 3 種類のファイル</strong>を自動生成します。受講者はプロンプトを入力するだけで、裏側では Python が自動でファイルを作ってくれます。
+      </p>
+
+      <div class="alert alert-info">
+        <div class="alert-title">裏側の仕組み（知っておくと安心）</div>
+        <p>Gemini CLI は Python の以下のライブラリを使ってファイルを生成します。ご自身でコードを書く必要はありません。Gemini が自動でコードを書いて実行してくれます。</p>
+        <ul style="margin-left:20px; margin-top:8px; line-height:2;">
+          <li><strong>openpyxl</strong>：Excel ファイル（.xlsx）の作成</li>
+          <li><strong>python-docx</strong>：Word ファイル（.docx）の作成</li>
+          <li><strong>python-pptx</strong>：PowerPoint ファイル（.pptx）の作成</li>
+        </ul>
+      </div>
+
+      <div class="alert alert-warning" style="margin-top:12px;">
+        <div class="alert-title">初回：ライブラリのインストールが必要な場合あり</div>
+        <p>上記ライブラリがまだインストールされていない場合、Gemini CLI がインストールを提案してくれます。提案が出たら「y」で許可してください。インストールは1回だけ行えば、次回以降は不要です。</p>
+        <div class="os-switch" style="margin-top:12px;">
+          <div class="os-tabs">
+            <button class="os-tab active" onclick="switchTab(this, 'pip-mac')">Mac</button>
+            <button class="os-tab" onclick="switchTab(this, 'pip-win')">Windows</button>
+          </div>
+          <div class="os-content">
+            <div class="os-pane active" id="pip-mac">
+              <div class="code-block"><span class="prompt">pip3 install openpyxl python-docx python-pptx</span>
+</div>
+            </div>
+            <div class="os-pane" id="pip-win">
+              <div class="code-block"><span class="ps-prompt">pip install openpyxl python-docx python-pptx</span>
+</div>
+            </div>
+          </div>
+        </div>
+        <p style="margin-top:8px;">Gemini CLI が自動でインストールを実行してくれる場合は、手動でのコマンド入力は不要です。</p>
+      </div>
+
+      <h3>今回作るファイルの全体像</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ファイル</th>
+              <th>内容</th>
+              <th>用途</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>セミナー集客データ_2020-2024.xlsx</td>
+              <td>5年間の実績データ＋グラフ</td>
+              <td>データ分析の素材（第4部で使用）</td>
+            </tr>
+            <tr>
+              <td>2020-2024年度セミナー実績報告書.docx</td>
+              <td>実績報告書（文書形式）</td>
+              <td>役員・上長への報告資料</td>
+            </tr>
+            <tr>
+              <td>来年度戦略提案スライド.pptx</td>
+              <td>戦略提案スライド（6枚）</td>
+              <td>会議・プレゼン用資料</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- セクション2：Excel作成 -->
+    <section class="section">
+      <h2>2. Excel ファイルの作成</h2>
+      <p>
+        まずは5年間のセミナー集客データを Excel に入力します。実際の業務でも使えるようなデータ形式で作ります。
+      </p>
+
+      <h3>データの内容（今回入力するもの）</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>年度</th>
+              <th>開催回数</th>
+              <th>参加者数</th>
+              <th>成約数</th>
+              <th>成約率</th>
+              <th>売上（万円）</th>
+              <th>広告費（万円）</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>2020</td>
+              <td>12回</td>
+              <td>360名</td>
+              <td>36名</td>
+              <td>10.0%</td>
+              <td>1,800万</td>
+              <td>240万</td>
+            </tr>
+            <tr>
+              <td>2021</td>
+              <td>10回</td>
+              <td>280名</td>
+              <td>25名</td>
+              <td>8.9%</td>
+              <td>1,250万</td>
+              <td>200万</td>
+            </tr>
+            <tr>
+              <td>2022</td>
+              <td>14回</td>
+              <td>420名</td>
+              <td>46名</td>
+              <td>11.0%</td>
+              <td>2,300万</td>
+              <td>300万</td>
+            </tr>
+            <tr>
+              <td>2023</td>
+              <td>16回</td>
+              <td>520名</td>
+              <td>57名</td>
+              <td>11.0%</td>
+              <td>2,850万</td>
+              <td>350万</td>
+            </tr>
+            <tr>
+              <td>2024</td>
+              <td>18回</td>
+              <td>610名</td>
+              <td>67名</td>
+              <td>11.0%</td>
+              <td>3,350万</td>
+              <td>400万</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Excel 作成のプロンプト</h3>
+
+      <div class="step">
+        <span class="step-number">1</span>
+        <strong>データ入力と基本的な書式設定を指示する</strong>
+      </div>
+
+      <div class="prompt-example">
+        <span class="label">入力するプロンプト</span>
+        <p>以下の内容で Excel ファイルを作成してください。ファイル名：セミナー集客データ_2020-2024.xlsx<br><br>
+        シート名「実績データ」に以下のデータを入力してください：<br>
+        ヘッダー行：年度、開催回数、参加者数（名）、成約数（名）、成約率（%）、売上（万円）、広告費（万円）<br>
+        2020年：12、360、36、10.0、1800、240<br>
+        2021年：10、280、25、8.9、1250、200<br>
+        2022年：14、420、46、11.0、2300、300<br>
+        2023年：16、520、57、11.0、2850、350<br>
+        2024年：18、610、67、11.0、3350、400<br><br>
+        ヘッダー行は青背景・白文字で目立たせ、列幅も自動調整してください</p>
+      </div>
+
+      <div class="step">
+        <span class="step-number">2</span>
+        <strong>グラフを追加する</strong>
+      </div>
+
+      <div class="prompt-example">
+        <span class="label">入力するプロンプト</span>
+        <p>グラフも追加してください。2枚お願いします：<br>
+        1枚目：参加者数の推移（年度別棒グラフ）、タイトル「参加者数の推移 2020-2024年」<br>
+        2枚目：成約率の推移（折れ線グラフ）、タイトル「成約率の推移 2020-2024年」<br>
+        グラフは「実績データ」シートに追加してください</p>
+      </div>
+
+      <div class="alert alert-info" style="margin-top:12px;">
+        <div class="alert-title">ヒント：Gemini がコードを書いて実行します</div>
+        <p>Gemini CLI は Python スクリプトを自動で作成して実行します。「スクリプトを実行してよいですか？」という確認が出たら「y」で許可してください。処理には数秒〜30秒程度かかります。</p>
+      </div>
+    </section>
+
+    <!-- セクション3：Word作成 -->
+    <section class="section">
+      <h2>3. Word 報告書の作成</h2>
+      <p>
+        次に、Excel のデータをもとにした実績報告書を Word で作成します。ヘッダー・見出し・表・箇条書きを使った、実務で使えるクオリティの文書を目指します。
+      </p>
+
+      <h3>報告書の構成</h3>
+      <ul style="margin-left:20px; line-height:2.2;">
+        <li><strong>表紙</strong>：タイトル、作成日、作成者</li>
+        <li><strong>1章：概要</strong>：報告書の目的と要点</li>
+        <li><strong>2章：実績データ要約</strong>：5年間のハイライト</li>
+        <li><strong>3章：トレンド分析</strong>：増減の傾向と背景</li>
+        <li><strong>4章：課題と提言</strong>：改善提案</li>
+      </ul>
+
+      <div class="step">
+        <span class="step-number">1</span>
+        <strong>報告書の基本構成を作る</strong>
+      </div>
+
+      <div class="prompt-example">
+        <span class="label">入力するプロンプト</span>
+        <p>セミナー実績の報告書を Word で作成してください。<br>
+        ファイル名：2020-2024年度セミナー実績報告書.docx<br><br>
+        構成は以下の通りです：<br>
+        ・表紙：タイトル「2020-2024年度 セミナー集客実績報告書」、作成日 2025年1月、作成者「営業部」<br>
+        ・第1章 概要：本報告書の目的（過去5年の集客実績の分析と来期戦略立案のため）<br>
+        ・第2章 実績データ要約：5年間のデータを表形式でまとめる（参加者数・成約数・売上の推移）<br>
+        ・第3章 トレンド分析：2021年に減少した理由と、2022年以降の回復傾向の分析<br>
+        ・第4章 課題と提言：成約率の安定と、広告費対売上比率の改善について提言を3点</p>
+      </div>
+
+      <div class="step">
+        <span class="step-number">2</span>
+        <strong>見やすさを整える</strong>
+      </div>
+
+      <div class="prompt-example">
+        <span class="label">入力するプロンプト</span>
+        <p>見出し、表、箇条書きを使って見やすく作ってください。特に以下の点を意識してください：<br>
+        ・各章のタイトルは「見出し1」スタイルで大きく<br>
+        ・第2章のデータは表形式（ヘッダーを青背景）<br>
+        ・第4章の提言は箇条書きで3点<br>
+        ・ページ番号をフッターに入れてください</p>
+      </div>
+
+      <div class="alert alert-info" style="margin-top:12px;">
+        <div class="alert-title">Word ファイルの確認方法</div>
+        <p>ファイルが作成されたら、ダブルクリックして Word または Google ドキュメントで開いて確認してください。レイアウトがずれている場合は「○○ページの表の幅を修正してください」のように追加指示を出せます。</p>
+      </div>
+    </section>
+
+    <!-- セクション4：PowerPoint作成 -->
+    <section class="section">
+      <h2>4. PowerPoint 提案資料の作成</h2>
+      <p>
+        いよいよプレゼンテーション資料の作成です。セミナー集客データをもとに、来年度の戦略を提案するスライドを作ります。
+      </p>
+
+      <h3>スライド構成（全6枚）</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>スライド番号</th>
+              <th>タイトル</th>
+              <th>主な内容</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>スライド1</td>
+              <td>表紙</td>
+              <td>資料タイトル・作成部門・日付</td>
+            </tr>
+            <tr>
+              <td>スライド2</td>
+              <td>過去5年の実績</td>
+              <td>参加者数・成約率・売上の推移表</td>
+            </tr>
+            <tr>
+              <td>スライド3</td>
+              <td>トレンド分析</td>
+              <td>増加傾向のグラフと主なポイント</td>
+            </tr>
+            <tr>
+              <td>スライド4</td>
+              <td>2025年予測</td>
+              <td>3シナリオ（楽観・基本・悲観）</td>
+            </tr>
+            <tr>
+              <td>スライド5</td>
+              <td>戦略提案</td>
+              <td>開催回数・広告費配分・成約率改善</td>
+            </tr>
+            <tr>
+              <td>スライド6</td>
+              <td>まとめ</td>
+              <td>重要ポイントの整理と次のアクション</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>デザイン指定</h3>
+      <ul style="margin-left:20px; line-height:2.2;">
+        <li>メインカラー：<strong>#2563eb</strong>（青）</li>
+        <li>サブカラー：<strong>#059669</strong>（緑）</li>
+        <li>アクセント：<strong>#f59e0b</strong>（オレンジ）</li>
+        <li>背景：白</li>
+        <li>フォント：日本語は「游ゴシック」または「メイリオ」</li>
+      </ul>
+
+      <div class="step">
+        <span class="step-number">1</span>
+        <strong>スライドの作成を依頼する</strong>
+      </div>
+
+      <div class="prompt-example">
+        <span class="label">入力するプロンプト</span>
+        <p>セミナー集客データをもとに、来年度の戦略提案スライドを作成してください。<br>
+        ファイル名：来年度戦略提案スライド.pptx<br><br>
+        スライド構成：<br>
+        スライド1（表紙）：タイトル「2025年度 セミナー集客戦略提案」、サブタイトル「過去5年の実績データ分析と来年度予測」、営業部<br>
+        スライド2（過去5年の実績）：2020〜2024年の参加者数・成約率・売上を一覧にした表<br>
+        スライド3（トレンド分析）：「参加者数は年平均17%増加」「成約率は2022年以降11%で安定」「広告費ROIが改善傾向」の3ポイントをビジュアルで<br>
+        スライド4（2025年予測）：楽観シナリオ（参加者720名・売上4,000万）・基本シナリオ（690名・3,800万）・悲観シナリオ（640名・3,500万）<br>
+        スライド5（戦略提案）：「開催回数を20回に増加」「デジタル広告費の比率を30%→50%に引上げ」「成約後フォロー体制の強化で成約率12%を目指す」<br>
+        スライド6（まとめ）：重要ポイント3点と、次の1ヶ月でやること（アクションプラン）</p>
+      </div>
+
+      <div class="step">
+        <span class="step-number">2</span>
+        <strong>デザインを指定する</strong>
+      </div>
+
+      <div class="prompt-example">
+        <span class="label">入力するプロンプト</span>
+        <p>ビジネス研修向けの見やすいデザインで作ってください。以下の配色を使ってください：<br>
+        ・スライドタイトルバー：青（#2563eb）背景・白文字<br>
+        ・強調ポイントの背景：緑（#059669）<br>
+        ・重要数字のハイライト：オレンジ（#f59e0b）<br>
+        ・スライド背景：白<br>
+        ・スライド番号をすべてのページに入れてください</p>
+      </div>
+    </section>
+
+    <!-- セクション5：ファイルの確認と修正 -->
+    <section class="section">
+      <h2>5. ファイルの確認と修正</h2>
+      <p>
+        ファイルが作成されたら、必ず内容を確認してください。AI が作成したファイルには誤字・レイアウトのずれが含まれることがあります。
+      </p>
+
+      <div class="prompt-example">
+        <span class="label">入力するプロンプト</span>
+        <p>作成した Excel・Word・PowerPoint ファイルの内容を確認してください。誤字脱字があれば修正してください。また、数値に計算ミスがないかも確認してください</p>
+      </div>
+
+      <h3>修正指示の出し方</h3>
+      <p>問題が見つかった場合は、以下のように具体的に指示します。</p>
+
+      <div class="prompt-example">
+        <span class="label">修正指示の例</span>
+        <p>Word 報告書の第2章にある表で、2021年の成約率が「8.9%」ではなく「89%」になっています。修正してください</p>
+      </div>
+
+      <div class="prompt-example">
+        <span class="label">修正指示の例</span>
+        <p>PowerPoint の表紙スライドで、日付が「2024年」になっています。「2025年1月」に直してください</p>
+      </div>
+
+      <h3>保存先の確認</h3>
+      <div class="prompt-example">
+        <span class="label">入力するプロンプト</span>
+        <p>今作ったファイルはどこに保存されていますか？フルパスを教えてください</p>
+      </div>
+
+      <div class="alert alert-success" style="margin-top:16px;">
+        <div class="alert-title">第3部のチェックリスト</div>
+        <ul class="checklist">
+          <li>セミナー集客データ_2020-2024.xlsx が作成できた</li>
+          <li>Excel にグラフ（棒グラフ・折れ線グラフ）が追加できた</li>
+          <li>2020-2024年度セミナー実績報告書.docx が作成できた</li>
+          <li>来年度戦略提案スライド.pptx が作成できた（全6枚）</li>
+          <li>ファイルの内容確認と修正が完了した</li>
+        </ul>
+      </div>
+    </section>
+      </div>
+    </div>
+
+    <div class="page-section" id="section-lesson04">
+      <div class="section-banner">
+        <h2>第4部：データ分析と未来予測</h2>
+        <p>5年間のデータから2025年を予測する</p>
+      </div>
+      <div class="container">
+
+      <h1>第4部：データ分析と未来予測</h1>
+      <p class="subtitle">5年間のセミナーデータから 2025 年の参加者数・成約率・売上を予測する</p>
+      <span class="badge">所要時間：約35分 | 難易度：初級〜中級</span>
+    <!-- セクション1：目標説明 -->
+    <section class="section">
+      <h2>1. この部でやること</h2>
+      <p>
+        第3部で作成した Excel ファイル（セミナー集客データ_2020-2024.xlsx）を Gemini CLI に読み込ませ、<strong>データ分析と2025年の予測</strong>を行います。分析結果は Word 報告書と PowerPoint 提案スライドにも反映させます。
+      </p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ステップ</th>
+              <th>内容</th>
+              <th>成果物</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1. データ分析</td>
+              <td>5年間の実績データの比較・成長率計算・相関分析</td>
+              <td>分析レポート（テキスト）</td>
+            </tr>
+            <tr>
+              <td>2. 来年予測</td>
+              <td>3シナリオでの予測（楽観・基本・悲観）</td>
+              <td>予測データ</td>
+            </tr>
+            <tr>
+              <td>3. Excel 反映</td>
+              <td>予測結果を新シートに追加</td>
+              <td>Excel ファイルの更新</td>
+            </tr>
+            <tr>
+              <td>4. 戦略提案</td>
+              <td>マーケティング的な提案</td>
+              <td>提案テキスト</td>
+            </tr>
+            <tr>
+              <td>5. 資料への反映</td>
+              <td>Word・PowerPoint を予測データで更新</td>
+              <td>完成版報告書・スライド</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="alert alert-info">
+        <div class="alert-title">この演習の主題</div>
+        <p>「5年間のセミナー集客データをもとに来年の参加者数・成約率・売上見込みを予測し、提案資料を作る」——これが今日の研修を通じた一貫したテーマです。この部でその核となる分析を行います。</p>
+      </div>
+    </section>
+
+    <!-- セクション2：データ分析 -->
+    <section class="section">
+      <h2>2. データ分析：現状を数字で把握する</h2>
+      <p>
+        まず Gemini CLI に Excel ファイルを読み込ませ、各種の比較分析をさせます。
+      </p>
+
+      <div class="step">
+        <span class="step-number">1</span>
+        <strong>Excel を読み込んで基本的な比較分析をする</strong>
+      </div>
+
+      <div class="prompt-example">
+        <span class="label">入力するプロンプト</span>
+        <p>セミナー集客データ_2020-2024.xlsx を読み込んで、各年度の比較分析をしてください。特に参加者数・成約率・売上の変化に注目してください</p>
+      </div>
+
+      <p>Gemini からの分析結果例：</p>
+      <div class="code-block"><span class="output">【基本比較分析】
+
+■ 参加者数の推移
+  2020年：360名 → 2021年：280名（▲22.2%）→ 2022年：420名（+50.0%）
+  → 2023年：520名（+23.8%）→ 2024年：610名（+17.3%）
+
+■ 成約率の推移
+  2020年：10.0% → 2021年：8.9%（▲1.1pt）→ 2022年：11.0%（+2.1pt）
+  → 2023年：11.0%（横ばい）→ 2024年：11.0%（横ばい）
+
+■ 売上の推移
+  2020年：1,800万円 → 2021年：1,250万円（▲30.6%）→ 2022年：2,300万円（+84.0%）
+  → 2023年：2,850万円（+23.9%）→ 2024年：3,350万円（+17.5%）
+
+【気づきポイント】
+・2021年は参加者数・成約率・売上がすべて低下（COVID-19 の影響と推測）
+・2022年以降は V字回復し、右肩上がりのトレンドが継続
+・成約率は 2022-2024 年の3年間で 11.0% に固定されている</span>
+</div>
+
+      <div class="step">
+        <span class="step-number">2</span>
+        <strong>成長率を計算する</strong>
+      </div>
+
+      <div class="prompt-example">
+        <span class="label">入力するプロンプト</span>
+        <p>年ごとの成長率を計算してください。参加者数・売上・広告費のそれぞれについて、前年比と5年間の年平均成長率（CAGR）も出してください</p>
+      </div>
+
+      <div class="code-block"><span class="output">【成長率分析】
+
+■ 参加者数の成長率
+  前年比：2021年 ▲22.2% / 2022年 +50.0% / 2023年 +23.8% / 2024年 +17.3%
+  5年間CAGR（2020→2024）：+14.1% ／年
+
+■ 売上の成長率
+  前年比：2021年 ▲30.6% / 2022年 +84.0% / 2023年 +23.9% / 2024年 +17.5%
+  5年間CAGR（2020→2024）：+16.8% ／年
+
+■ 広告費の成長率
+  前年比：2021年 ▲16.7% / 2022年 +50.0% / 2023年 +16.7% / 2024年 +14.3%
+  5年間CAGR（2020→2024）：+13.6% ／年
+
+【注目点】
+・売上の成長率が参加者数の成長率を上回っている（成約率の安定＋単価上昇の可能性）
+・広告費は売上ほど増えていない → 広告効率が改善傾向</span>
+</div>
+
+      <div class="step">
+        <span class="step-number">3</span>
+        <strong>参加者数と成約率の相関を分析する</strong>
+      </div>
+
+      <div class="prompt-example">
+        <span class="label">入力するプロンプト</span>
+        <p>参加者数と成約率の相関関係を分析してください。参加者数が増えると成約率は上がるのか、下がるのか、関係ないのかを教えてください</p>
+      </div>
+
+      <div class="step">
+        <span class="step-number">4</span>
+        <strong>広告費と売上のROIを計算する</strong>
+      </div>
+
+      <div class="prompt-example">
+        <span class="label">入力するプロンプト</span>
+        <p>広告費と売上の ROI（Return on Investment：投資対効果）を年ごとに計算してください。「広告費 1 万円あたりの売上」の形で出してください</p>
+      </div>
+
+      <div class="code-block"><span class="output">【広告費 ROI 分析】
+
+  年度  広告費   売上    売上/広告費（ROI）
+  2020  240万   1,800万  7.5倍
+  2021  200万   1,250万  6.3倍  ← 最低
+  2022  300万   2,300万  7.7倍
+  2023  350万   2,850万  8.1倍
+  2024  400万   3,350万  8.4倍  ← 最高
+
+広告費 1 万円あたりの売上：2020年 7.5万円 → 2024年 8.4万円
+ROI は5年間で 12% 改善しています。
+広告の効率が年々上がっていることを示しています。</span>
+</div>
+    </section>
+
+    <!-- セクション3：来年予測 -->
+    <section class="section">
+      <h2>3. 来年予測：2025 年の数字を予測する</h2>
+      <p>
+        分析が完了したら、過去のトレンドをもとに2025年の予測を立てます。1つの予測だけでなく、<strong>3つのシナリオ</strong>で予測するのがポイントです。
+      </p>
+
+      <div class="step">
+        <span class="step-number">1</span>
+        <strong>基本的な予測を依頼する</strong>
+      </div>
+
+      <div class="prompt-example">
+        <span class="label">入力するプロンプト</span>
+        <p>過去5年のトレンドから、2025年の参加者数・成約率・売上を予測してください。単純な線形回帰とトレンド外挿の両方で予測してください</p>
+      </div>
+
+      <div class="step">
+        <span class="step-number">2</span>
+        <strong>前提条件と限界を明記させる</strong>
+      </div>
+
+      <div class="prompt-example">
+        <span class="label">入力するプロンプト</span>
+        <p>予測の前提条件と限界も明記してください。どんな条件が変わると予測が外れる可能性があるかも教えてください</p>
+      </div>
+
+      <div class="code-block"><span class="output">【予測の前提条件と限界】
+
+■ 前提条件
+・2022〜2024年の直近3年間のトレンドが継続すると仮定
+・外部環境（景気・競合・社会情勢）の急変はないと仮定
+・セミナーの開催形式・品質・価格帯は維持されると仮定
+
+■ 予測が外れる可能性のある要因
+・景気の急激な悪化（参加者の予算削減）
+・競合他社の大幅な台頭（市場シェアの喪失）
+・開催コストの大幅な増加（会場費・人件費）
+・トレンドの成熟（成長鈍化）
+・予期しない好材料（メディア露出・著名人の推薦）
+
+■ 信頼区間
+・標本数が5年分（5データ点）と少ないため、予測誤差は ±15〜20% 程度
+・特に5年前のデータ（COVID-19 影響期）は現在の傾向と乖離している可能性あり</span>
+</div>
+
+      <div class="step">
+        <span class="step-number">3</span>
+        <strong>3シナリオで予測を出す</strong>
+      </div>
+
+      <div class="prompt-example">
+        <span class="label">入力するプロンプト</span>
+        <p>楽観シナリオ・基本シナリオ・悲観シナリオの3パターンで2025年を予測してください。それぞれのシナリオで想定される条件も教えてください</p>
+      </div>
+
+      <div class="code-block"><span class="output">【2025年 3シナリオ予測】
+
+■ 楽観シナリオ（好条件が揃った場合）
+  想定条件：新規施策が奏功・口コミ効果・広告効率の向上
+  参加者数：720名（前年比 +18.0%）
+  成約率：12.0%（+1.0pt改善）
+  売上：4,200万円（前年比 +25.4%）
+  広告費：450万円
+
+■ 基本シナリオ（現在のトレンドが継続）
+  想定条件：現状の成長率・成約率・広告費配分を維持
+  参加者数：690名（前年比 +13.1%）
+  成約率：11.0%（横ばい）
+  売上：3,850万円（前年比 +14.9%）
+  広告費：440万円
+
+■ 悲観シナリオ（成長が鈍化した場合）
+  想定条件：市場成熟・競合激化・広告効率の低下
+  参加者数：640名（前年比 +4.9%）
+  成約率：10.5%（▲0.5pt）
+  売上：3,450万円（前年比 +3.0%）
+  広告費：430万円</span>
+</div>
+    </section>
+
+    <!-- セクション4：予測結果のExcel反映 -->
+    <section class="section">
+      <h2>4. 予測結果を Excel に追加する</h2>
+      <p>
+        予測結果を元の Excel ファイルに追加して、実績と予測を1つのファイルで管理できるようにします。
+      </p>
+
+      <div class="prompt-example">
+        <span class="label">入力するプロンプト</span>
+        <p>予測結果を Excel ファイルの新しいシートに追加してください。<br>
+        シート名：「2025年予測」<br>
+        内容：楽観・基本・悲観の3シナリオの数値を横並びで比較できる表形式にしてください。<br>
+        また、実績データ（2020-2024年）と3シナリオの予測を重ねた折れ線グラフも追加してください。<br>
+        グラフタイトル：「参加者数の実績と2025年予測（3シナリオ）」</p>
+      </div>
+
+      <div class="alert alert-info" style="margin-top:12px;">
+        <div class="alert-title">ヒント：グラフの凡例をわかりやすく</div>
+        <p>グラフに「実績」「楽観」「基本」「悲観」の凡例をつけてもらいましょう。異なる色（実績：青、楽観：緑、基本：黄、悲観：赤）にすると見やすくなります。</p>
+      </div>
+    </section>
+
+    <!-- セクション5：マーケティング示唆 -->
+    <section class="section">
+      <h2>5. マーケティング示唆：分析から戦略提案へ</h2>
+      <p>
+        数字の分析だけでなく、「では来年度どうすればよいか」という戦略的な提案を Gemini に出してもらいましょう。
+      </p>
+
+      <div class="step">
+        <span class="step-number">1</span>
+        <strong>セミナー戦略の提案を依頼する</strong>
+      </div>
+
+      <div class="prompt-example">
+        <span class="label">入力するプロンプト</span>
+        <p>分析結果から、来年度のセミナー戦略について3つの提案をしてください。各提案は「課題」「施策」「期待効果」の形式で書いてください</p>
+      </div>
+
+      <div class="code-block"><span class="output">【来年度セミナー戦略 提案】
+
+■ 提案1：成約率の上限突破（目標：11% → 12%）
+  課題：2022年以降、成約率が11%で頭打ちになっている
+  施策：セミナー後の個別フォローアップ体制を整備する
+        （参加者全員に48時間以内の個別メール＋30日後のリマインド）
+  期待効果：成約率 1pt 改善で売上が約350万円増加
+
+■ 提案2：広告費の最適配分（デジタル重視へ転換）
+  課題：現在の広告費配分が不透明で、チャネル別 ROI が不明
+  施策：SNS 広告・リスティング広告のデータを集計し、
+        ROI の高いチャネルに予算を集中（全体の 60% をデジタルへ）
+  期待効果：同じ広告費でリーチが20%増加と試算
+
+■ 提案3：開催回数の増加（年18回 → 20回）
+  課題：参加者数の増加に対して開催回数が追いついていない
+  施策：オンライン開催を追加して2回増やす（コスト増を最小化）
+  期待効果：参加者数が約 7% 増加、売上換算で約270万円増</span>
+</div>
+
+      <div class="step">
+        <span class="step-number">2</span>
+        <strong>広告費の最適配分案を出してもらう</strong>
+      </div>
+
+      <div class="prompt-example">
+        <span class="label">入力するプロンプト</span>
+        <p>2025年の広告費を440万円と仮定した場合の最適配分案を提案してください。チャネル別（SNS広告・リスティング広告・オフライン広告・その他）に分けて、それぞれの予算配分と理由を教えてください</p>
+      </div>
+    </section>
+
+    <!-- セクション6：報告書・提案資料への反映 -->
+    <section class="section">
+      <h2>6. 分析結果を既存の資料に反映する</h2>
+      <p>
+        第3部で作成した Word 報告書と PowerPoint スライドに、今回の分析結果と予測を追加します。
+      </p>
+
+      <div class="step">
+        <span class="step-number">1</span>
+        <strong>Word 報告書に追記する</strong>
+      </div>
+
+      <div class="prompt-example">
+        <span class="label">入力するプロンプト</span>
+        <p>分析結果と予測を、先ほど作成した Word 報告書に追記してください。<br>
+        ・第3章「トレンド分析」に：成長率分析・ROI 分析・参加者数と成約率の相関の内容を追記<br>
+        ・第5章「2025年予測と提案」（新規追加）に：3シナリオ予測と戦略提案3点を追記<br>
+        既存の内容は変えずに、章を追加する形でお願いします</p>
+      </div>
+
+      <div class="step">
+        <span class="step-number">2</span>
+        <strong>PowerPoint スライドを予測データで更新する</strong>
+      </div>
+
+      <div class="prompt-example">
+        <span class="label">入力するプロンプト</span>
+        <p>PowerPoint 提案資料も予測データで更新してください。<br>
+        ・スライド4（2025年予測）：先ほど計算した3シナリオの数値に更新<br>
+        ・スライド5（戦略提案）：先ほどの3つの提案内容に更新<br>
+        ・スライド6（まとめ）：重要ポイントと来月のアクションプランを追記<br>
+        全体のデザインや配色は変えずにお願いします</p>
+      </div>
+    </section>
+
+    <!-- セクション7：AI予測の限界 -->
+    <section class="section">
+      <h2>7. AI 予測の限界を理解しておこう</h2>
+
+      <div class="alert alert-warning">
+        <div class="alert-title">重要：AI による予測はあくまで「参考値」です</div>
+        <p>Gemini CLI による予測は、過去のデータのトレンドから数学的に計算した推定値です。以下の点を必ず念頭に置いてください。</p>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>項目</th>
+              <th>内容</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>あくまで過去データからの推定</strong></td>
+              <td>予測は過去5年のデータに基づいています。過去のパターンが今後も続くとは限りません</td>
+            </tr>
+            <tr>
+              <td><strong>外部要因は考慮されない</strong></td>
+              <td>景気の変動・競合の動向・社会情勢の変化は予測に含まれていません</td>
+            </tr>
+            <tr>
+              <td><strong>データが少ない</strong></td>
+              <td>5年分（5データ点）は統計的に多くありません。誤差は ±15〜20% 程度を見込んでください</td>
+            </tr>
+            <tr>
+              <td><strong>意思決定の参考として使う</strong></td>
+              <td>予測を「正解」として扱わず、意思決定の1つの参考材料として使ってください</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="alert alert-success" style="margin-top:16px;">
+        <div class="alert-title">第4部の完了チェック</div>
+        <ul class="checklist">
+          <li>5年間のデータ比較分析ができた（成長率・ROI）</li>
+          <li>参加者数と成約率の相関を確認した</li>
+          <li>2025年の3シナリオ予測が完成した</li>
+          <li>予測を Excel の新シートに追加した</li>
+          <li>戦略提案3点が出せた</li>
+          <li>Word 報告書と PowerPoint スライドを更新した</li>
+        </ul>
+      </div>
+    </section>
+      </div>
+    </div>
+
+    <div class="page-section" id="section-lesson05">
+      <div class="section-banner">
+        <h2>第5部：PDF化・QRコード生成</h2>
+        <p>資料を配布できる形に仕上げる</p>
+      </div>
+      <div class="container">
+
+      <h1>第5部：PDF 化・QR コード生成</h1>
+      <p class="subtitle">作成した資料を配布できる形に仕上げ、成果物を整理しよう</p>
+      <span class="badge">所要時間：約25分 | 難易度：入門〜初級</span>
+    <!-- セクション1：PDF出力 -->
+    <section class="section">
+      <h2>1. PDF 出力：資料を配布できる形に変換する</h2>
+      <p>
+        Word・PowerPoint・Excel などのファイルは、相手が同じソフトを持っていないと開けなかったり、レイアウトが崩れたりすることがあります。<strong>PDF 形式</strong>に変換すれば、どんな環境でも見た目が崩れずに共有できます。
+      </p>
+
+      <div class="alert alert-info">
+        <div class="alert-title">PDF 化の仕組み</div>
+        <p>Gemini CLI は PDF への変換に、Python ライブラリ（reportlab・fpdf2 等）や、PC にインストール済みの LibreOffice などを使用します。環境によって使われるツールが異なりますが、Gemini が自動で最適な方法を選んでくれます。</p>
+      </div>
+
+      <h3>Word 報告書を PDF に変換する</h3>
+      <div class="step">
+        <span class="step-number">1</span>
+        <strong>Word ファイルを PDF に変換する</strong>
+      </div>
+
+      <div class="prompt-example">
+        <span class="label">入力するプロンプト</span>
+        <p>作成した Word 報告書をPDFに変換してください。<br>
+        入力ファイル：2020-2024年度セミナー実績報告書.docx<br>
+        出力ファイル：2020-2024年度セミナー実績報告書.pdf<br>
+        保存場所は元のファイルと同じフォルダにしてください</p>
+      </div>
+
+      <h3>PowerPoint 提案スライドを PDF に変換する</h3>
+      <div class="prompt-example">
+        <span class="label">入力するプロンプト</span>
+        <p>PowerPoint 提案資料もPDFにしてください。<br>
+        入力ファイル：来年度戦略提案スライド.pptx<br>
+        出力ファイル：来年度戦略提案スライド.pdf<br>
+        スライドは1ページに1枚の配置でPDF化してください</p>
+      </div>
+
+      <h3>Excel 集計表を PDF に変換する</h3>
+      <div class="prompt-example">
+        <span class="label">入力するプロンプト</span>
+        <p>Excel 集計表もPDF化してください。<br>
+        入力ファイル：セミナー集客データ_2020-2024.xlsx<br>
+        出力ファイル：セミナー集客データ_2020-2024.pdf<br>
+        「実績データ」シートと「2025年予測」シートの両方をPDF化してください</p>
+      </div>
+
+      <div class="alert alert-warning" style="margin-top:12px;">
+        <div class="alert-title">PDF 変換がうまくいかない場合</div>
+        <p>LibreOffice がインストールされていない環境では、PDF 変換に失敗することがあります。その場合は Gemini CLI が代替方法（Python ライブラリの使用など）を提案してくれます。または Word / PowerPoint のソフト上から「PDF として保存」機能を使う方法もあります。</p>
+      </div>
+    </section>
+
+    <!-- セクション2：QRコード生成 -->
+    <section class="section">
+      <h2>2. QR コード生成：URL を QR コードに変換する</h2>
+      <p>
+        セミナーの案内資料・チラシ・名刺などに QR コードを載せることで、参加者がスマートフォンで簡単にフォームや資料にアクセスできるようになります。Gemini CLI で一度に複数の QR コードを生成できます。
+      </p>
+
+      <div class="alert alert-info">
+        <div class="alert-title">使用するライブラリ</div>
+        <p><strong>qrcode</strong>（Python）ライブラリを使用します。未インストールの場合は Gemini CLI がインストールを提案します。</p>
+      </div>
+
+      <h3>今回生成する QR コードの URL 一覧</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>用途</th>
+              <th>URL</th>
+              <th>ファイル名</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>セミナー告知ページ</td>
+              <td>https://example.com/seminar2025</td>
+              <td>qr_seminar2025.png</td>
+            </tr>
+            <tr>
+              <td>申込フォーム</td>
+              <td>https://example.com/entry-form</td>
+              <td>qr_entry-form.png</td>
+            </tr>
+            <tr>
+              <td>会社プロフィール</td>
+              <td>https://example.com/company-profile</td>
+              <td>qr_company-profile.png</td>
+            </tr>
+            <tr>
+              <td>お問い合わせ</td>
+              <td>https://example.com/contact</td>
+              <td>qr_contact.png</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="step">
+        <span class="step-number">1</span>
+        <strong>QR コードを一括生成する</strong>
+      </div>
+
+      <div class="prompt-example">
+        <span class="label">入力するプロンプト</span>
+        <p>以下の URL 一覧から QR コードを生成してください。<br><br>
+        URL リスト：<br>
+        ・https://example.com/seminar2025<br>
+        ・https://example.com/entry-form<br>
+        ・https://example.com/company-profile<br>
+        ・https://example.com/contact<br><br>
+        QR コードは qr_codes フォルダに保存し、ファイル名は URL の内容がわかるようにしてください（例：qr_seminar2025.png）。<br>
+        画像サイズは 300×300 ピクセルで、読み取りやすい品質にしてください</p>
+      </div>
+
+      <p>Gemini からの確認メッセージ例：</p>
+      <div class="code-block"><span class="output">以下の操作を実行します：
+1. qr_codes/ フォルダを作成
+2. QR コードを生成（4件）：
+   ・qr_seminar2025.png
+   ・qr_entry-form.png
+   ・qr_company-profile.png
+   ・qr_contact.png
+
+実行してよいですか？ [y/n]: </span>
+</div>
+
+      <div class="step">
+        <span class="step-number">2</span>
+        <strong>URL 一覧表を CSV で出力する</strong>
+      </div>
+
+      <div class="prompt-example">
+        <span class="label">入力するプロンプト</span>
+        <p>URL 一覧表も CSV で出力してください。<br>
+        ファイル名：qr_url_list.csv<br>
+        列：用途、URL、QR コードファイル名<br>
+        保存場所：qr_codes フォルダ</p>
+      </div>
+
+      <h3>QR コードの確認方法</h3>
+      <p>生成された QR コード画像は、スマートフォンのカメラアプリで読み取って確認してください。正しい URL に遷移すれば成功です。</p>
+
+      <div class="prompt-example">
+        <span class="label">QR コード一覧を確認するプロンプト</span>
+        <p>qr_codes フォルダの中身を一覧表示してください。ファイルサイズも教えてください</p>
+      </div>
+    </section>
+
+    <!-- セクション3：成果物の整理 -->
+    <section class="section">
+      <h2>3. 成果物の整理：最終的なフォルダ構成を作る</h2>
+      <p>
+        今日の研修で作ったすべての成果物を、わかりやすいフォルダ構成に整理します。第2部で学んだフォルダ整理の知識を活かします。
+      </p>
+
+      <div class="step">
+        <span class="step-number">1</span>
+        <strong>成果物フォルダ構成に整理する</strong>
+      </div>
+
+      <div class="prompt-example">
+        <span class="label">入力するプロンプト</span>
+        <p>今日の研修で作成した成果物を以下のフォルダ構成に整理してください：<br><br>
+        gemini-workshop-output/<br>
+        ├── 01_整理済データ/    ← sample_data_clean の整理済みファイル<br>
+        ├── 02_分析用データ/    ← セミナー集客データ_2020-2024.xlsx<br>
+        ├── 03_資料（Office）/ ← Word・PowerPoint のオリジナル<br>
+        ├── 04_PDF/            ← 各ファイルの PDF 版<br>
+        └── 05_QRコード/       ← QR コード画像と URL リスト<br><br>
+        元のファイルは残したまま、コピーで整理してください</p>
+      </div>
+
+      <div class="step">
+        <span class="step-number">2</span>
+        <strong>各フォルダに README.txt を作成する</strong>
+      </div>
+
+      <div class="prompt-example">
+        <span class="label">入力するプロンプト</span>
+        <p>各フォルダに README.txt を作成して、中身の説明を書いてください。<br>
+        フォーマット：<br>
+        ・フォルダ名<br>
+        ・このフォルダの用途（1〜2行）<br>
+        ・主なファイル一覧<br>
+        ・最終更新日（今日の日付）<br>
+        ・作成者（「Gemini CLI 研修受講者」と記載）</p>
+      </div>
+
+      <p>README.txt の例：</p>
+      <div class="code-block"><span class="output">===== 03_資料（Office） =====
+このフォルダについて：
+Word・PowerPoint の編集可能な形式のオリジナルファイルを格納しています。
+内容を修正する場合はこちらのファイルを編集してください。
+
+主なファイル：
+- 2020-2024年度セミナー実績報告書.docx
+- 来年度戦略提案スライド.pptx
+
+最終更新日：2025年1月xx日
+作成者：Gemini CLI 研修受講者</span>
+</div>
+    </section>
+
+    <!-- セクション4：最終確認 -->
+    <section class="section">
+      <h2>4. 最終確認：成果物の全体を確認する</h2>
+      <p>
+        すべての成果物が揃っているかを最終確認します。
+      </p>
+
+      <div class="prompt-example">
+        <span class="label">入力するプロンプト</span>
+        <p>成果物フォルダ（gemini-workshop-output）の全体構成をツリー表示してください。各ファイルのサイズも表示してください</p>
+      </div>
+
+      <p>完成形のイメージ：</p>
+      <div class="code-block"><span class="output">gemini-workshop-output/
+├── 01_整理済データ/
+│   ├── README.txt (1.2KB)
+│   ├── 01_集客データ/
+│   │   └── 2020-01_集客データ_セミナー参加者.csv (など)
+│   ├── 02_報告書/
+│   └── ...
+├── 02_分析用データ/
+│   ├── README.txt (0.8KB)
+│   └── セミナー集客データ_2020-2024.xlsx (48KB)
+├── 03_資料（Office）/
+│   ├── README.txt (0.9KB)
+│   ├── 2020-2024年度セミナー実績報告書.docx (42KB)
+│   └── 来年度戦略提案スライド.pptx (185KB)
+├── 04_PDF/
+│   ├── README.txt (0.7KB)
+│   ├── 2020-2024年度セミナー実績報告書.pdf (320KB)
+│   ├── 来年度戦略提案スライド.pdf (890KB)
+│   └── セミナー集客データ_2020-2024.pdf (210KB)
+└── 05_QRコード/
+    ├── README.txt (0.8KB)
+    ├── qr_url_list.csv (0.5KB)
+    ├── qr_seminar2025.png (12KB)
+    ├── qr_entry-form.png (12KB)
+    ├── qr_company-profile.png (13KB)
+    └── qr_contact.png (11KB)
+
+合計：12ファイル / 1.7MB</span>
+</div>
+
+      <div class="alert alert-success" style="margin-top:16px;">
+        <div class="alert-title">第5部の完了チェックリスト</div>
+        <ul class="checklist">
+          <li>Word 報告書を PDF に変換できた</li>
+          <li>PowerPoint スライドを PDF に変換できた</li>
+          <li>Excel 集計表を PDF に変換できた</li>
+          <li>QR コードを4件生成できた（スマートフォンで動作確認済み）</li>
+          <li>URL 一覧を CSV で出力できた</li>
+          <li>成果物を5つのフォルダに整理できた</li>
+          <li>各フォルダに README.txt を設置できた</li>
+        </ul>
+      </div>
+    </section>
+      </div>
+    </div>
+
+    <div class="page-section" id="section-lesson06">
+      <div class="section-banner">
+        <h2>第6部：まとめと次の一歩</h2>
+        <p>今日の学びを整理し明日からの実務に活かす</p>
+      </div>
+      <div class="container">
+
+    <h1>第6部：まとめと次の一歩</h1>
+    <p class="subtitle">今日の学びを整理し、明日からの実務に活かす</p>
+    <span class="badge">所要時間：残り時間すべて</span>
+  <!-- ==============================
+       セクション1：今日の振り返り
+  ============================== -->
+  <section class="section">
+    <h2>1. 今日学んだこと — 6つのポイント</h2>
+    <p>
+      本日の研修「セミナー集客データ5年分の分析・予測」を通じて学んだことを振り返ります。
+    </p>
+
+    <div class="step">
+      <div class="step-number">1</div>
+      <h3>Gemini CLI でファイル・フォルダを整理できる</h3>
+      <p>
+        バラバラだった <code>sample_data_messy</code> フォルダを、日本語の指示だけで整然と整理できました。
+        「確認してから実行」という安全な手順も体験しました。
+        命名ルール（年月・用途・版数）を Gemini に考えてもらうことで、属人的なフォルダ管理から脱却できます。
+      </p>
+    </div>
+
+    <div class="step">
+      <div class="step-number">2</div>
+      <h3>Excel・Word・PowerPoint をプロンプトだけで生成できる</h3>
+      <p>
+        Python の <code>openpyxl</code>・<code>python-docx</code>・<code>python-pptx</code> を背後で使いながら、
+        受講者はプロンプトを出すだけで3種のOfficeファイルを作れました。
+        データ・グラフ・デザインの指定も日本語で伝わります。
+      </p>
+    </div>
+
+    <div class="step">
+      <div class="step-number">3</div>
+      <h3>データ分析（成長率・ROI計算）を自動化できる</h3>
+      <p>
+        5年分の集客データから前年比・CAGR・広告費ROIを自動計算しました。
+        Excelの関数を知らなくても、Gemini CLI に依頼するだけで正確な数値が得られます。
+      </p>
+    </div>
+
+    <div class="step">
+      <div class="step-number">4</div>
+      <h3>3シナリオによる未来予測ができる</h3>
+      <p>
+        楽観・基本・悲観の3シナリオで2025年度を予測しました。
+        「AIが言うから正しい」ではなく、前提条件と限界を理解した上で参考にする姿勢が大切です。
+      </p>
+    </div>
+
+    <div class="step">
+      <div class="step-number">5</div>
+      <h3>PDF変換とQRコード生成ができる</h3>
+      <p>
+        Word・PowerPointをPDFに変換し、URLからQRコードを一括生成しました。
+        これまで手作業や有料ツールに頼っていた作業が、プロンプト1つで完結します。
+      </p>
+    </div>
+
+    <div class="step">
+      <div class="step-number">6</div>
+      <h3>成果物を整然と管理する仕組みを作れる</h3>
+      <p>
+        01_整理済み〜05_QRコードの5フォルダ構成で全成果物を一元管理しました。
+        「どこに何があるか」が明確な状態を、Gemini CLI が自動で構築してくれます。
+      </p>
+    </div>
+  </section>
+
+  <!-- ==============================
+       セクション2：実務活用アイデア
+  ============================== -->
+  <section class="section">
+    <h2>2. 実務活用アイデア</h2>
+    <p>今日学んだスキルをどの業務に応用できるか、具体的なアイデアを挙げます。</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>業務シーン</th>
+          <th>Gemini CLI の活用例</th>
+          <th>期待効果</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>デスクトップ整理</strong></td>
+          <td>散在したファイルを用途別フォルダに自動分類・命名</td>
+          <td>探し物の時間を削減</td>
+        </tr>
+        <tr>
+          <td><strong>月次報告書テンプレート作成</strong></td>
+          <td>実績データを読み込んでWordに自動挿入</td>
+          <td>報告書作成時間を半減</td>
+        </tr>
+        <tr>
+          <td><strong>営業資料の更新</strong></td>
+          <td>最新数値をPowerPointに自動反映・PDF出力</td>
+          <td>更新作業のミスを防止</td>
+        </tr>
+        <tr>
+          <td><strong>QRコード一括生成</strong></td>
+          <td>セミナー・展示会用のURLをまとめてQR化</td>
+          <td>印刷物の作成コスト削減</td>
+        </tr>
+        <tr>
+          <td><strong>定型的な事務作業</strong></td>
+          <td>ファイル名変換・フォーマット統一・データ集計</td>
+          <td>繰り返し作業を自動化</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ==============================
+       セクション3：よくある失敗例
+  ============================== -->
+  <section class="section">
+    <h2>3. よくある失敗例と対策</h2>
+    <p>Gemini CLI を使い始めた人がつまずきやすいパターンと、その対策を紹介します。</p>
+
+    <div class="alert alert-danger">
+      <div class="alert-title">失敗例1：曖昧な指示を出す</div>
+      「いい感じにまとめてください」「適当に整理して」のような指示では、
+      意図と違う結果になりがちです。<br>
+      <strong>対策：</strong>ファイル名・フォルダ名・列名・配色など、具体的な数値や名前を指定しましょう。
+    </div>
+
+    <div class="alert alert-danger" style="margin-top:12px;">
+      <div class="alert-title">失敗例2：確認なしで実行させる</div>
+      「すぐにファイルを移動して」と一気に指示すると、
+      元のファイルが失われたり意図しない場所に移動することがあります。<br>
+      <strong>対策：</strong>「実行前に何をするか一覧で見せてください」を必ず入れましょう。
+    </div>
+
+    <div class="alert alert-danger" style="margin-top:12px;">
+      <div class="alert-title">失敗例3：実務データをそのまま使う</div>
+      研修の学習段階で本番の顧客データや機密情報をGemini CLIに入力するのは危険です。<br>
+      <strong>対策：</strong>練習・検証はサンプルデータで行い、本番導入は会社のポリシーを確認してから。
+    </div>
+
+    <div class="alert alert-danger" style="margin-top:12px;">
+      <div class="alert-title">失敗例4：一度に大量の指示を出す</div>
+      「Excelを作って、分析して、Wordに書いて、スライドも作って」と一気に依頼すると、
+      どこかでエラーが起きても原因が特定しにくくなります。<br>
+      <strong>対策：</strong>1つずつ順番に依頼し、それぞれ確認してから次に進みましょう。
+    </div>
+  </section>
+
+  <!-- ==============================
+       セクション4：安全に使うポイント
+  ============================== -->
+  <section class="section">
+    <h2>4. 安全に使う4つのポイント</h2>
+
+    <div class="step">
+      <div class="step-number">1</div>
+      <h3>必ず確認してから実行する</h3>
+      <p>
+        ファイルの移動・削除・上書きを伴う操作は、実行前に「何をするか一覧で見せてください」と確認を取る癖をつけましょう。
+        Gemini CLI は確認なしで実行しようとする場合もありますが、「先に計画を教えてから実行してください」と一言添えるだけで安全性が大幅に上がります。
+      </p>
+    </div>
+
+    <div class="step">
+      <div class="step-number">2</div>
+      <h3>バックアップを取ってから作業する</h3>
+      <p>
+        大切なデータは Gemini CLI に触れさせる前に必ずバックアップを作成してください。
+        「元データは残してコピー側で整理してください」というプロンプトを習慣化することも有効です。
+      </p>
+    </div>
+
+    <div class="step">
+      <div class="step-number">3</div>
+      <h3>最初は練習データで試す</h3>
+      <p>
+        新しい操作を試すときは、本番データではなくサンプルデータで動作確認してから本番に適用してください。
+        今日の研修で使った <code>sample_data_messy</code> のような練習用フォルダを常に用意しておくと安心です。
+      </p>
+    </div>
+
+    <div class="step">
+      <div class="step-number">4</div>
+      <h3>小さく始めて少しずつ拡大する</h3>
+      <p>
+        最初から全業務をAI化しようとせず、「まず1つの定型業務をAIで試してみる」ところから始めましょう。
+        うまくいったら少しずつ対象を広げていく方が、失敗リスクが低く学習効果も高まります。
+      </p>
+    </div>
+  </section>
+
+  <!-- ==============================
+       セクション5：AI利用の基本的な注意点
+  ============================== -->
+  <section class="section">
+    <h2>5. AI利用の基本的な注意点</h2>
+    <p>
+      Gemini CLI を含むすべてのAIツールを利用する際の基本的な注意事項です（OWASP AIリスク軽量版に基づく）。
+    </p>
+
+    <div class="alert alert-warning">
+      <div class="alert-title">個人情報・機密情報を入力しない</div>
+      顧客の氏名・住所・電話番号、社内の未公開財務データ、契約情報などはAIに入力しないでください。
+      入力したデータがモデルの学習に使われる可能性があります。
+      社内ポリシーと利用規約を必ず確認してください。
+    </div>
+
+    <div class="alert alert-warning" style="margin-top:12px;">
+      <div class="alert-title">AIの出力を鵜呑みにしない</div>
+      AIは「もっともらしい文章」を生成しますが、事実と異なる情報（ハルシネーション）を出力することがあります。
+      数値・法律・医療・専門知識に関する出力は、必ず人間が内容を確認・検証してから使用してください。
+    </div>
+
+    <div class="alert alert-warning" style="margin-top:12px;">
+      <div class="alert-title">重要な意思決定はAIだけに頼らない</div>
+      今日の演習で行った予測・戦略提案はあくまでも参考情報です。
+      採用・予算配分・法的判断など重要な意思決定は、必ず専門家・上長の判断と組み合わせてください。
+    </div>
+
+    <div class="alert alert-warning" style="margin-top:12px;">
+      <div class="alert-title">プロンプト・出力内容の管理</div>
+      AIとのやり取り（プロンプト・レスポンス）も業務情報の一部です。
+      スクリーンショットや共有には社内のセキュリティポリシーに従ってください。
+    </div>
+  </section>
+
+  <!-- ==============================
+       セクション6：次のステップ
+  ============================== -->
+  <section class="section">
+    <h2>6. 次のステップ — 明日からやること</h2>
+    <p>「わかった」を「できる」に変えるための具体的なアクションを提案します。</p>
+
+    <div class="step">
+      <div class="step-number">1</div>
+      <h3>日常業務の1つをAIで試してみる</h3>
+      <p>
+        まず「毎週やっている繰り返し作業」を1つ選んでください。
+        例：月次売上データのExcel整理、週報のWord作成、顧客へのURL送付用QRコード生成など。
+        その1つをGemini CLIで試してみることが最初のステップです。
+      </p>
+    </div>
+
+    <div class="step">
+      <div class="step-number">2</div>
+      <h3>プロンプトを工夫して精度を上げる</h3>
+      <p>
+        同じ依頼でも、プロンプトの書き方次第で結果の質が大きく変わります。
+        「具体的なファイル名・列名・フォルダ名を書く」「出力形式（表・箇条書き・文章）を指定する」
+        「確認してから実行してください、を添える」の3点を意識してみてください。
+      </p>
+    </div>
+
+    <div class="step">
+      <div class="step-number">3</div>
+      <h3>定期業務の自動化を検討する</h3>
+      <p>
+        月次・週次で繰り返す業務（報告書作成・データ集計・ファイル整理）は自動化の有力候補です。
+        Gemini CLIへの指示をメモしておき、毎回同じプロンプトを流用することで作業時間を大幅に短縮できます。
+      </p>
+    </div>
+  </section>
+
+  <!-- ==============================
+       セクション7：推奨学習パス
+  ============================== -->
+  <section class="section">
+    <h2>7. 推奨学習パス</h2>
+    <p>本研修の前後に取り組むことで、より深く・確実にスキルを身につけられます。</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>フェーズ</th>
+          <th>コンテンツ</th>
+          <th>目的</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>事前セットアップ</strong></td>
+          <td>
+            <a href="#section-lesson01">第1部：CLIセットアップとログイン</a>
+          </td>
+          <td>環境構築・Gemini CLIの基本操作を習得</td>
+        </tr>
+        <tr>
+          <td><strong>本編（今日）</strong></td>
+          <td>第2〜5部のハンズオン</td>
+          <td>フォルダ整理・Office生成・分析・PDF/QR出力を体験</td>
+        </tr>
+        <tr>
+          <td><strong>復習ミニ課題</strong></td>
+          <td>自分の業務データ（サンプル）で同じ流れを再現</td>
+          <td>記憶の定着・自分ごと化</td>
+        </tr>
+        <tr>
+          <td><strong>社内活用</strong></td>
+          <td>月次報告・定例資料・ファイル整理のいずれか1つに適用</td>
+          <td>実務への導入・ROIの実感</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="alert alert-success">
+      <div class="alert-title">お疲れさまでした！</div>
+      本日の「Gemini CLI 実務活用講座」はこれで完了です。
+      セミナー集客データ5年分の分析・予測という一貫したテーマを通じて、
+      フォルダ整理からOffice生成・データ分析・PDF化・QRコード生成まで一通り体験できました。
+      明日から1つでも業務に活かしてみてください。ご受講ありがとうございました。
+    </div>
+  </section>
+
+  <!-- ページナビゲーション -->
+      </div>
+    </div>
+
+  </div>
+  <button class="back-to-top">↑</button>
+  <footer class="footer">
+    Gemini CLI 実務活用講座 &copy; 2025
+  </footer>
+  <script>
+// ============================================
+// Gemini CLI 実務活用講座 - 共通JavaScript
+// ============================================
+
+// --- Copy Button ---
+document.addEventListener('DOMContentLoaded', function() {
+  // Add copy buttons to all code blocks
+  document.querySelectorAll('.code-block').forEach(function(block) {
+    if (block.querySelector('.copy-btn')) return;
+    var btn = document.createElement('button');
+    btn.className = 'copy-btn';
+    btn.textContent = 'コピー';
+    btn.addEventListener('click', function() {
+      var text = block.textContent.replace('コピー', '').replace('コピー済み', '').trim();
+      // Remove prompt prefixes for cleaner copy
+      text = text.replace(/^\$ /gm, '').replace(/^PS> /gm, '');
+      navigator.clipboard.writeText(text).then(function() {
+        btn.textContent = 'コピー済み';
+        btn.classList.add('copied');
+        setTimeout(function() {
+          btn.textContent = 'コピー';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    });
+    block.appendChild(btn);
+  });
+
+  // Add copy buttons to prompt examples
+  document.querySelectorAll('.prompt-example').forEach(function(block) {
+    if (block.querySelector('.copy-btn')) return;
+    var btn = document.createElement('button');
+    btn.className = 'copy-btn';
+    btn.style.top = '8px';
+    btn.style.right = '8px';
+    btn.textContent = 'コピー';
+    btn.addEventListener('click', function() {
+      var text = block.textContent.replace('コピー', '').replace('コピー済み', '').trim();
+      // Remove label text
+      var label = block.querySelector('.label');
+      if (label) {
+        text = text.replace(label.textContent, '').trim();
+      }
+      navigator.clipboard.writeText(text).then(function() {
+        btn.textContent = 'コピー済み';
+        btn.classList.add('copied');
+        setTimeout(function() {
+          btn.textContent = 'コピー';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    });
+    block.style.position = 'relative';
+    block.appendChild(btn);
+  });
+
+  // --- OS Tab Switcher (data-os attribute style) ---
+  document.querySelectorAll('.os-tab').forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      var parent = tab.closest('.os-switch');
+      if (!parent) return;
+      parent.querySelectorAll('.os-tab').forEach(function(t) { t.classList.remove('active'); });
+      parent.querySelectorAll('.os-pane').forEach(function(p) { p.classList.remove('active'); });
+      tab.classList.add('active');
+      var target = parent.querySelector('.os-pane[data-os="' + tab.dataset.os + '"]');
+      if (target) target.classList.add('active');
+    });
+  });
+});
+
+// --- OS Tab Switcher (onclick / ID style) ---
+function switchTab(tabEl, paneId) {
+  var parent = tabEl.closest('.os-switch');
+  if (!parent) return;
+  parent.querySelectorAll('.os-tab').forEach(function(t) { t.classList.remove('active'); });
+  parent.querySelectorAll('.os-pane').forEach(function(p) { p.classList.remove('active'); });
+  tabEl.classList.add('active');
+  var target = document.getElementById(paneId);
+  if (target) target.classList.add('active');
+}
+
+
+var pageSections = document.querySelectorAll('.page-section');
+var sidebarLinks = document.querySelectorAll('.sidebar a[href^="#"]');
+window.addEventListener('scroll', function() {
+  var scrollPos = window.scrollY + 120;
+  pageSections.forEach(function(sec) {
+    if (sec.offsetTop <= scrollPos && (sec.offsetTop + sec.offsetHeight) > scrollPos) {
+      sidebarLinks.forEach(function(l) { l.classList.remove('active'); });
+      var a = document.querySelector('.sidebar a[href="#' + sec.id + '"]');
+      if (a) a.classList.add('active');
+    }
+  });
+  var btn = document.querySelector('.back-to-top');
+  if (window.scrollY > 500) btn.classList.add('visible');
+  else btn.classList.remove('visible');
+});
+document.querySelector('.back-to-top').addEventListener('click', function() {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+document.querySelector('.mobile-toggle').addEventListener('click', function() {
+  document.querySelector('.sidebar').classList.toggle('open');
+});
+document.querySelectorAll('.sidebar a').forEach(function(link) {
+  link.addEventListener('click', function() {
+    if (window.innerWidth <= 900) document.querySelector('.sidebar').classList.remove('open');
+  });
+});
+
+  </script>
+</body>
+</html>
