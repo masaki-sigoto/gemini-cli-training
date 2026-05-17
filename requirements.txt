@@ -39,10 +39,10 @@
 # ▼ ステップ 4：インストール結果を確認する
 #
 #   ◆ 共通
-#     pip3 list | grep -E "openpyxl|docx|pptx|qrcode|Pillow|reportlab"
-#       （Windows なら pip list | findstr /R "openpyxl docx pptx qrcode Pillow reportlab"）
+#     pip3 list | grep -E "openpyxl|docx|pptx|qrcode|Pillow|reportlab|matplotlib"
+#       （Windows なら pip list | findstr /R "openpyxl docx pptx qrcode Pillow reportlab matplotlib"）
 #
-#     6 行表示されれば OK です。
+#     7 行表示されれば OK です。
 #
 # ---------------------------------------------------------------------
 # 【会社 PC で pip が制限される場合】
@@ -73,3 +73,4 @@ python-pptx>=1.0.2      # 第3部：PowerPoint ファイル（.pptx）の生成
 qrcode>=8.0             # 第5部：QR コード画像の生成
 Pillow>=10.0.0          # 第5部：画像処理（qrcode のバックエンド）
 reportlab>=4.0.0        # 第5部：PDF 生成（LibreOffice が無い環境向けフォールバック）
+matplotlib>=3.8.0       # 第4部：データ分析グラフの生成（output_examples/02_分析/analyze_seminar_data.py が使用）
