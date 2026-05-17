@@ -1,13 +1,75 @@
-# Gemini CLI 実務活用講座 — 必要 Python ライブラリ
-# 受講者：講座開始前にこのファイル直下で次のコマンドを実行してください
-#   pip3 install -r requirements.txt
+# =====================================================================
+# Gemini CLI 実務活用講座 — 必要 Python ライブラリ一覧
+# =====================================================================
 #
-# 講座でこれらを直接タイプすることはありません。Gemini CLI が裏で利用します。
-# AI がコードを生成して動かす際に「ライブラリが見つかりません」エラーを防ぐためのものです。
+# このファイルは、講座の第3部以降のハンズオンで Gemini CLI が裏で
+# 使う Python ライブラリの一覧です。事前に下記コマンドを 1 回実行して
+# おけば、当日「ライブラリが見つかりません」エラーで詰まりません。
+#
+# ---------------------------------------------------------------------
+# 【インストール手順】
+# ---------------------------------------------------------------------
+#
+# ▼ ステップ 1：このファイルをダウンロードする
+#   https://gemini-cli-training.pages.dev/requirements.txt
+#   ブラウザで右クリック →「名前を付けて保存」、または curl/wget
+#
+# ▼ ステップ 2：ダウンロードしたフォルダに移動する
+#
+#   ◆ Mac（ターミナル）の場合
+#     例：ダウンロードフォルダにある場合
+#     cd ~/Downloads
+#
+#   ◆ Windows（PowerShell）の場合
+#     例：ダウンロードフォルダにある場合
+#     cd $env:USERPROFILE\Downloads
+#
+# ▼ ステップ 3：インストールコマンドを実行する
+#
+#   ◆ Mac の場合
+#     pip3 install -r requirements.txt
+#
+#   ◆ Windows の場合
+#     pip install -r requirements.txt
+#
+#   ※ 「pip がない」「python がない」と出た場合は、まず Python 本体を
+#     https://www.python.org/downloads/ からインストールしてください。
+#     Windows は「Add Python to PATH」に必ずチェックを入れてください。
+#
+# ▼ ステップ 4：インストール結果を確認する
+#
+#   ◆ 共通
+#     pip3 list | grep -E "openpyxl|docx|pptx|qrcode|Pillow|reportlab"
+#       （Windows なら pip list | findstr /R "openpyxl docx pptx qrcode Pillow reportlab"）
+#
+#     6 行表示されれば OK です。
+#
+# ---------------------------------------------------------------------
+# 【会社 PC で pip が制限される場合】
+# ---------------------------------------------------------------------
+#
+# 「権限がありません」「アクセスが拒否されました」とエラーが出る場合、
+# 以下のいずれかをお試しください：
+#
+#   ① ユーザー領域だけにインストール（管理者権限不要）
+#       pip3 install --user -r requirements.txt
+#
+#   ② 仮想環境を作ってその中にインストール
+#       python3 -m venv venv
+#       source venv/bin/activate         # Mac
+#       venv\Scripts\activate            # Windows
+#       pip install -r requirements.txt
+#
+#   ③ 情報システム部門に「Python パッケージのローカルインストールを
+#     許可してほしい」と相談（テンプレ文面は事前準備案内ページ参照）
+#
+# ---------------------------------------------------------------------
+# 【ライブラリ詳細】
+# ---------------------------------------------------------------------
 
-openpyxl>=3.1.5         # Excel ファイル（.xlsx）の生成・編集（第3部）
-python-docx>=1.2.0      # Word ファイル（.docx）の生成（第3部）
-python-pptx>=1.0.2      # PowerPoint ファイル（.pptx）の生成（第3部）
-qrcode>=8.0             # QR コード画像の生成（第5部）
-Pillow>=10.0.0          # 画像処理（qrcode のバックエンド）
-reportlab>=4.0.0        # PDF 生成（第5部・LibreOffice が無い場合のフォールバック）
+openpyxl>=3.1.5         # 第3部：Excel ファイル（.xlsx）の生成・編集
+python-docx>=1.2.0      # 第3部：Word ファイル（.docx）の生成
+python-pptx>=1.0.2      # 第3部：PowerPoint ファイル（.pptx）の生成
+qrcode>=8.0             # 第5部：QR コード画像の生成
+Pillow>=10.0.0          # 第5部：画像処理（qrcode のバックエンド）
+reportlab>=4.0.0        # 第5部：PDF 生成（LibreOffice が無い環境向けフォールバック）
