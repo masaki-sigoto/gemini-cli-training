@@ -5425,7 +5425,8 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // --- OS Tab Switcher (data-os attribute style) ---
-  document.querySelectorAll('.os-tab').forEach(function(tab) {
+  // Only attach to tabs that use data-os; onclick-style tabs handle themselves via switchTab().
+  document.querySelectorAll('.os-tab[data-os]').forEach(function(tab) {
     tab.addEventListener('click', function() {
       var parent = tab.closest('.os-switch');
       if (!parent) return;
