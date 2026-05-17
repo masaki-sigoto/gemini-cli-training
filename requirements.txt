@@ -1,0 +1,13 @@
+# Gemini CLI 実務活用講座 — 必要 Python ライブラリ
+# 受講者：講座開始前にこのファイル直下で次のコマンドを実行してください
+#   pip3 install -r requirements.txt
+#
+# 講座でこれらを直接タイプすることはありません。Gemini CLI が裏で利用します。
+# AI がコードを生成して動かす際に「ライブラリが見つかりません」エラーを防ぐためのものです。
+
+openpyxl>=3.1.5         # Excel ファイル（.xlsx）の生成・編集（第3部）
+python-docx>=1.2.0      # Word ファイル（.docx）の生成（第3部）
+python-pptx>=1.0.2      # PowerPoint ファイル（.pptx）の生成（第3部）
+qrcode>=8.0             # QR コード画像の生成（第5部）
+Pillow>=10.0.0          # 画像処理（qrcode のバックエンド）
+reportlab>=4.0.0        # PDF 生成（第5部・LibreOffice が無い場合のフォールバック）

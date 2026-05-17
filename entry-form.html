@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>申込フォーム — Gemini CLI 実務活用講座</title>
+  <meta name="description" content="Gemini CLI 実務活用講座 申込フォームのご案内ページです。">
+  <meta name="theme-color" content="#2563eb">
+  <meta name="robots" content="noindex">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial,
+                   'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+      background: linear-gradient(135deg, #eff6ff 0%, #ecfeff 100%);
+      color: #1f2937;
+      min-height: 100vh;
+      padding: 24px 16px;
+      line-height: 1.7;
+    }
+    .container { max-width: 720px; margin: 0 auto; }
+    header {
+      background: linear-gradient(135deg, #2563eb, #059669);
+      color: #fff;
+      padding: 32px 24px;
+      border-radius: 16px 16px 0 0;
+      text-align: center;
+    }
+    header h1 { font-size: 1.6em; margin-bottom: 8px; letter-spacing: 0.02em; }
+    header p { opacity: 0.95; font-size: 0.95em; }
+    main {
+      background: #fff;
+      padding: 32px 24px;
+      border-radius: 0 0 16px 16px;
+      box-shadow: 0 6px 24px rgba(15, 23, 42, 0.08);
+    }
+    h2 {
+      color: #1e40af;
+      font-size: 1.2em;
+      border-bottom: 2px solid #2563eb;
+      padding-bottom: 6px;
+      margin: 24px 0 12px;
+    }
+    .dates {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin: 16px 0;
+    }
+    .dates ul { list-style: none; }
+    .dates li {
+      padding: 6px 0;
+      font-weight: 600;
+      color: #1e3a8a;
+    }
+    .cta {
+      display: block;
+      margin: 24px auto;
+      padding: 16px 32px;
+      max-width: 360px;
+      background: linear-gradient(135deg, #2563eb, #059669);
+      color: #fff;
+      text-decoration: none;
+      text-align: center;
+      border-radius: 999px;
+      font-weight: 700;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35);
+    }
+    .notice {
+      background: #fef3c7;
+      border-left: 4px solid #f59e0b;
+      padding: 14px 18px;
+      border-radius: 0 8px 8px 0;
+      margin: 16px 0;
+      font-size: 0.92em;
+      color: #78350f;
+    }
+    .back-link {
+      display: inline-block;
+      margin-top: 24px;
+      color: #2563eb;
+      text-decoration: none;
+      font-size: 0.9em;
+    }
+    .back-link:hover { text-decoration: underline; }
+    footer {
+      text-align: center;
+      margin-top: 32px;
+      color: #6b7280;
+      font-size: 0.85em;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>📝 申込フォーム</h1>
+      <p>Gemini CLI 実務活用講座（3時間オンラインハンズオン）</p>
+    </header>
+
+    <main>
+      <p>本ページにアクセスありがとうございます！<br>
+      下記いずれかの日程で開催予定の <strong>Gemini CLI 実務活用講座</strong> へのご参加申込はこちらからお願いいたします。</p>
+
+      <h2>開催候補日</h2>
+      <div class="dates">
+        <ul>
+          <li>Ⓐ 2026年 5月28日（木）20:00〜23:00</li>
+          <li>Ⓑ 2026年 6月 4日（木）20:00〜23:00</li>
+        </ul>
+        <p style="margin-top:8px; font-size:0.9em; color:#475569;">
+          ※ 参加希望者の多い回を確定開催日とさせていただきます（両日参加可の方はその旨ご記入ください）。
+        </p>
+      </div>
+
+      <div class="notice">
+        ⚠️ <strong>申込フォーム準備中です。</strong>
+        現在 Google フォームを準備中のため、お申し込み・お問い合わせはお手数ですが
+        主催者（masaki）まで直接ご連絡ください。フォーム公開次第、このページに申込ボタンを表示します。
+      </div>
+
+      <h2>形式・対象</h2>
+      <ul style="margin-left:20px;">
+        <li><strong>形式</strong>：オンライン（Zoom）／ PC 推奨（スマホ不可）</li>
+        <li><strong>所要時間</strong>：3時間（事前準備別途）</li>
+        <li><strong>対象</strong>：PC初心者〜初級者、事務・営業企画・管理系の方</li>
+        <li><strong>OS</strong>：Mac / Windows どちらでも可</li>
+        <li><strong>事前準備</strong>：Node.js + Gemini CLI のインストール（10分〜1時間）</li>
+      </ul>
+
+      <h2>講座詳細</h2>
+      <p>講座の全体像・カリキュラム・全マップ統合画像は講座サイトでご確認いただけます。</p>
+      <a href="/" class="cta">講座サイトを見る →</a>
+
+      <a href="/" class="back-link">← 講座トップに戻る</a>
+
+      <footer>
+        Gemini CLI 実務活用講座 &copy; 2026<br>
+        <span style="font-size:0.85em;">本ページは講座の申込窓口として運用しています。</span>
+      </footer>
+    </main>
+  </div>
+</body>
+</html>
