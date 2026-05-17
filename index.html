@@ -559,6 +559,69 @@ tr:nth-child(even) td {
   .hero-eyecatch a { border-radius: 12px; box-shadow: 0 4px 16px rgba(15, 23, 42, 0.18); }
 }
 
+/* --- Apply CTA (お申し込みセクション) --- */
+.apply-cta {
+  margin: 32px auto;
+  padding: 28px 24px;
+  background: linear-gradient(135deg, #eff6ff, #ecfeff);
+  border: 2px solid #2563eb;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.08);
+}
+.apply-cta__title {
+  font-size: 1.4em;
+  font-weight: 700;
+  color: #1e3a8a;
+  margin: 0 0 8px;
+}
+.apply-cta__lead {
+  color: #374151;
+  margin: 0 0 16px;
+  line-height: 1.7;
+}
+.apply-cta__dates {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  justify-content: center;
+  margin: 0 0 20px;
+  padding: 12px 18px;
+  background: #fff;
+  border-radius: 10px;
+  font-weight: 600;
+  color: #1e40af;
+  font-size: 0.95em;
+}
+.apply-cta__dates span { white-space: nowrap; }
+.apply-cta__button {
+  display: inline-block;
+  padding: 16px 40px;
+  background: linear-gradient(135deg, #2563eb, #059669);
+  color: #fff !important;
+  text-decoration: none;
+  border-radius: 999px;
+  font-size: 1.1em;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.apply-cta__button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35);
+}
+.apply-cta__note {
+  margin: 14px 0 0;
+  font-size: 0.85em;
+  color: #6b7280;
+}
+@media (max-width: 640px) {
+  .apply-cta { padding: 22px 16px; margin: 24px auto; }
+  .apply-cta__title { font-size: 1.2em; }
+  .apply-cta__button { padding: 14px 28px; font-size: 1em; width: 100%; max-width: 320px; }
+  .apply-cta__dates { font-size: 0.88em; padding: 10px 14px; }
+}
+
 /* --- Embedded Map Figure (inline preview with zoom) --- */
 .map-figure {
   margin: 28px 0;
@@ -604,6 +667,90 @@ tr:nth-child(even) td {
   .map-figure figcaption { font-size: 0.85em; }
 }
 
+/* --- Apply CTA (申込ボタン) --- */
+.apply-cta {
+  margin: 0 auto 32px;
+  padding: 28px 24px;
+  text-align: center;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border-radius: 16px;
+  border: 2px solid #f59e0b;
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.18);
+}
+.apply-cta__lead {
+  font-size: 1.1em;
+  color: #78350f;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.apply-cta__sub {
+  font-size: 0.95em;
+  color: #92400e;
+  margin-bottom: 18px;
+  line-height: 1.7;
+}
+.apply-cta__buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.apply-cta__btn {
+  display: inline-block;
+  padding: 14px 28px;
+  border-radius: 10px;
+  font-size: 1.05em;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.apply-cta__btn--primary {
+  background: #dc2626;
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(220, 38, 38, 0.35);
+}
+.apply-cta__btn--primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(220, 38, 38, 0.45);
+}
+.apply-cta__btn--secondary {
+  background: #fff;
+  color: #b45309;
+  border: 2px solid #f59e0b;
+}
+.apply-cta__btn--secondary:hover {
+  transform: translateY(-2px);
+  background: #fffbeb;
+}
+.apply-cta__note {
+  margin-top: 14px;
+  font-size: 0.85em;
+  color: #92400e;
+}
+.apply-cta__dates {
+  display: inline-flex;
+  gap: 16px;
+  margin: 4px 0 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.apply-cta__date-chip {
+  display: inline-block;
+  padding: 6px 14px;
+  background: #fff;
+  border: 1.5px solid #f59e0b;
+  border-radius: 999px;
+  color: #92400e;
+  font-weight: 600;
+  font-size: 0.95em;
+}
+@media (max-width: 640px) {
+  .apply-cta { padding: 22px 18px; border-radius: 12px; }
+  .apply-cta__buttons { flex-direction: column; }
+  .apply-cta__btn { display: block; }
+  .apply-cta__dates { flex-direction: column; gap: 8px; }
+}
+
 .section-banner { background: linear-gradient(135deg, #2563eb, #059669); color: #fff; padding: 28px 24px; text-align: center; }
 .section-banner.mac { background: linear-gradient(135deg, #334155, #475569); }
 .section-banner.win { background: linear-gradient(135deg, #1e40af, #3b82f6); }
@@ -624,6 +771,7 @@ tr:nth-child(even) td {
     <div class="sidebar-group">
       <div class="sidebar-group-title">講座概要</div>
       <a href="#section-index">講座トップ</a>
+      <a href="#section-apply">📝 お申し込み</a>
     </div>
     <div class="sidebar-group">
       <div class="sidebar-group-title">事前準備</div>
@@ -673,6 +821,26 @@ tr:nth-child(even) td {
       </a>
     </figure>
 
+    <!-- 申込CTA -->
+    <div class="apply-cta" id="apply">
+      <div class="apply-cta__lead">📝 参加お申し込み受付中</div>
+      <div class="apply-cta__sub">
+        参加希望者の多い回を確定開催いたします。<br>
+        ご都合の良い日にお申し込みください（両日OKも歓迎）。
+      </div>
+      <div class="apply-cta__dates">
+        <span class="apply-cta__date-chip">Ⓐ 5/28（木）20:00〜23:00</span>
+        <span class="apply-cta__date-chip">Ⓑ 6/4（木）20:00〜23:00</span>
+      </div>
+      <div class="apply-cta__buttons">
+        <a href="#contact" class="apply-cta__btn apply-cta__btn--primary">📝 申込フォームへ</a>
+        <a href="#contact" class="apply-cta__btn apply-cta__btn--secondary">💬 直接ご連絡もOK</a>
+      </div>
+      <div class="apply-cta__note">
+        フォーム未準備の場合は「直接ご連絡」からお気軽にお問い合わせください
+      </div>
+    </div>
+
     <!-- 全マップ統合（講座全体像の俯瞰） -->
     <figure class="map-figure map-figure--overview">
       <a href="assets/maps/map-overview-all.png" target="_blank" rel="noopener noreferrer" aria-label="全マップ統合画像を原寸で開く">
@@ -682,6 +850,22 @@ tr:nth-child(even) td {
         <strong>🗺️ この講座で学ぶ流れ（全マップ統合）</strong>：講座全体マップ・プロジェクト管理マップ・次の一歩マップを1枚で俯瞰<span class="zoom-hint">クリックで拡大</span>
       </figcaption>
     </figure>
+
+    <!-- 申し込みCTA（上部） -->
+    <aside class="apply-cta" id="section-apply" aria-labelledby="apply-title">
+      <h2 class="apply-cta__title" id="apply-title">📝 受講のお申し込み</h2>
+      <p class="apply-cta__lead">下記いずれかの日程で開催予定です。<br>参加希望者の多い回を確定開催とさせていただきます。</p>
+      <div class="apply-cta__dates">
+        <span>Ⓐ 2026/5/28（木）20:00〜23:00</span>
+        <span>Ⓑ 2026/6/4（木）20:00〜23:00</span>
+      </div>
+      <p>
+        <a href="https://forms.gle/REPLACE_WITH_YOUR_FORM_URL" class="apply-cta__button" target="_blank" rel="noopener noreferrer">
+          お申し込みフォームへ進む →
+        </a>
+      </p>
+      <p class="apply-cta__note">所要：1〜2分／プログラミング経験不要・Mac/Windows両対応<br>確定日と事前準備の詳細はフォーム送信後にメールでお送りします</p>
+    </aside>
 
     <!-- イントロダクション -->
     <div class="section">
