@@ -639,6 +639,68 @@ tr:nth-child(even) td {
   .hero-slider__zoom-link { font-size: 0.75em; padding: 4px 10px; top: 8px; right: 8px; }
 }
 
+/* --- What You Can Do (講座でできること インフォグラフィック) --- */
+.what-can-do {
+  margin: 0 auto 36px;
+  width: 100%;
+  max-width: 1100px;
+  text-align: center;
+}
+.what-can-do__title {
+  font-size: 1.4em;
+  color: #1e3a8a;
+  margin: 0 0 8px;
+  font-weight: 700;
+}
+.what-can-do__lead {
+  color: #475569;
+  margin: 0 0 18px;
+  font-size: 0.95em;
+  line-height: 1.7;
+}
+.what-can-do__figure {
+  margin: 0;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 6px 22px rgba(15, 23, 42, 0.12);
+  background: #fff;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.what-can-do__figure a {
+  display: block;
+  cursor: zoom-in;
+}
+.what-can-do__figure a:hover {
+  transform: translateY(-2px);
+}
+.what-can-do__figure:hover {
+  box-shadow: 0 10px 32px rgba(15, 23, 42, 0.18);
+}
+.what-can-do__figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.what-can-do__caption {
+  margin-top: 10px;
+  font-size: 0.88em;
+  color: #6b7280;
+}
+.what-can-do__caption .zoom-hint {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 8px;
+  font-size: 0.92em;
+  color: #2563eb;
+  background: #eff6ff;
+  border-radius: 12px;
+}
+@media (max-width: 640px) {
+  .what-can-do { margin-bottom: 24px; }
+  .what-can-do__title { font-size: 1.2em; }
+  .what-can-do__figure { border-radius: 12px; box-shadow: 0 4px 16px rgba(15, 23, 42, 0.12); }
+}
+
 /* --- Downloads Card (受講者向けダウンロード) --- */
 .downloads {
   margin: 28px 0;
@@ -851,6 +913,22 @@ tr:nth-child(even) td {
         <button class="hero-slider__dot" type="button" role="tab" aria-label="スライド 4 へ" aria-selected="false"></button>
       </div>
     </div>
+
+    <!-- この講座でできること（インフォグラフィック） -->
+    <section class="what-can-do" aria-labelledby="what-can-do-title">
+      <h2 class="what-can-do__title" id="what-can-do-title">🎯 この講座でできること</h2>
+      <p class="what-can-do__lead">
+        AI エージェントをセットアップしてからデータ整理 → 資料作成 → 分析 → PDF/QR 配布、さらに「将来的にチームの一員として AI が働いてくれる」未来像までを 1 枚で俯瞰します。
+      </p>
+      <figure class="what-can-do__figure">
+        <a href="assets/maps/what-you-can-do.png" target="_blank" rel="noopener noreferrer" aria-label="講座でできることインフォグラフィックを原寸で開く">
+          <img src="assets/maps/what-you-can-do.png" alt="この講座でできること：AIエージェントのセットアップ・データ整理・資料作成・分析レポート・PDF/QRコード生成、さらに将来のチーム連携像までを示したインフォグラフィック" loading="lazy">
+        </a>
+        <figcaption class="what-can-do__caption">
+          <strong>📍 講座でできることマップ</strong>：3 時間で身につくスキル & 受講後の未来像を 1 枚で<span class="zoom-hint">クリックで拡大</span>
+        </figcaption>
+      </figure>
+    </section>
 
 
     <!-- 全マップ統合（講座全体像の俯瞰） -->
