@@ -529,34 +529,114 @@ tr:nth-child(even) td {
 .sidebar a:hover { background: rgba(255,255,255,0.05); color: #fff; }
 .sidebar a.active { background: rgba(37,99,235,0.15); color: #89b4fa; border-left-color: #89b4fa; }
 .main-content { margin-left: 280px; }
-/* --- Hero Eyecatch (page top main visual) --- */
-.hero-eyecatch {
+/* --- Hero Slider (page top main visual / multi-image) --- */
+.hero-slider {
+  position: relative;
   margin: 0 auto 36px;
   width: 100%;
   max-width: 1280px;
-  text-align: center;
-}
-.hero-eyecatch a {
-  display: block;
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 8px 28px rgba(15, 23, 42, 0.18);
+  background: #f8fafc;
+  aspect-ratio: 16 / 9;
+}
+.hero-slider__track {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.hero-slider__slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: #fff;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-  cursor: zoom-in;
 }
-.hero-eyecatch a:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 36px rgba(15, 23, 42, 0.22);
-}
-.hero-eyecatch img {
+.hero-slider__slide.is-active { opacity: 1; z-index: 1; }
+.hero-slider__slide img {
   display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: contain;
+  background: #f1f5f9;
 }
+.hero-slider__btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+  background: rgba(15, 23, 42, 0.55);
+  color: #fff;
+  border: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  font-size: 22px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, transform 0.2s ease;
+  user-select: none;
+}
+.hero-slider__btn:hover { background: rgba(15, 23, 42, 0.8); transform: translateY(-50%) scale(1.08); }
+.hero-slider__btn:focus-visible { outline: 3px solid #2563eb; outline-offset: 2px; }
+.hero-slider__btn--prev { left: 12px; }
+.hero-slider__btn--next { right: 12px; }
+.hero-slider__dots {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  display: flex;
+  gap: 8px;
+  padding: 6px 10px;
+  background: rgba(15, 23, 42, 0.45);
+  border-radius: 999px;
+}
+.hero-slider__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.55);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.hero-slider__dot.is-active { background: #fff; transform: scale(1.25); }
+.hero-slider__dot:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.hero-slider__zoom-link {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 5;
+  background: rgba(15, 23, 42, 0.55);
+  color: #fff;
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.82em;
+  font-weight: 600;
+  transition: background 0.2s ease;
+}
+.hero-slider__zoom-link:hover { background: rgba(15, 23, 42, 0.85); }
 @media (max-width: 640px) {
-  .hero-eyecatch { margin-bottom: 24px; }
-  .hero-eyecatch a { border-radius: 12px; box-shadow: 0 4px 16px rgba(15, 23, 42, 0.18); }
+  .hero-slider { margin-bottom: 24px; border-radius: 12px; box-shadow: 0 4px 16px rgba(15, 23, 42, 0.18); }
+  .hero-slider__btn { width: 36px; height: 36px; font-size: 18px; }
+  .hero-slider__btn--prev { left: 8px; }
+  .hero-slider__btn--next { right: 8px; }
+  .hero-slider__dots { bottom: 10px; gap: 6px; padding: 5px 8px; }
+  .hero-slider__dot { width: 8px; height: 8px; }
+  .hero-slider__zoom-link { font-size: 0.75em; padding: 4px 10px; top: 8px; right: 8px; }
 }
 
 /* --- Downloads Card (受講者向けダウンロード) --- */
@@ -741,12 +821,36 @@ tr:nth-child(even) td {
       </div>
       <div class="container">
 
-    <!-- Hero アイキャッチ -->
-    <figure class="hero-eyecatch">
-      <a href="assets/maps/ogp-eyecatch.png" target="_blank" rel="noopener noreferrer" aria-label="アイキャッチ画像を原寸で開く">
-        <img src="assets/maps/ogp-eyecatch.png" alt="Gemini CLI 実務活用講座 アイキャッチ" loading="eager">
-      </a>
-    </figure>
+    <!-- Hero スライダー（4 枚切替・自動 5 秒） -->
+    <div class="hero-slider" id="heroSlider"
+         role="region" aria-roledescription="カルーセル" aria-label="講座アイキャッチ画像（4 枚）"
+         data-autoplay="5000">
+      <a class="hero-slider__zoom-link" id="heroSliderZoom"
+         href="assets/maps/hero-1.png" target="_blank" rel="noopener noreferrer"
+         aria-label="現在のアイキャッチ画像を原寸で開く">🔍 拡大</a>
+      <div class="hero-slider__track">
+        <div class="hero-slider__slide is-active" role="group" aria-roledescription="スライド" aria-label="1 / 4">
+          <img src="assets/maps/hero-1.png" alt="Gemini CLI 実務活用講座 アイキャッチ（A：ビジネス風）" loading="eager">
+        </div>
+        <div class="hero-slider__slide" role="group" aria-roledescription="スライド" aria-label="2 / 4">
+          <img src="assets/maps/hero-2.png" alt="Gemini CLI 実務活用講座 アイキャッチ（B：みんなで学ぼう）" loading="lazy">
+        </div>
+        <div class="hero-slider__slide" role="group" aria-roledescription="スライド" aria-label="3 / 4">
+          <img src="assets/maps/hero-3.png" alt="Gemini CLI 実務活用講座 アイキャッチ（C：パステル可愛い）" loading="lazy">
+        </div>
+        <div class="hero-slider__slide" role="group" aria-roledescription="スライド" aria-label="4 / 4">
+          <img src="assets/maps/hero-4.png" alt="Gemini CLI 実務活用講座 アイキャッチ（D：開催日入り告知）" loading="lazy">
+        </div>
+      </div>
+      <button class="hero-slider__btn hero-slider__btn--prev" type="button" aria-label="前のスライドへ">‹</button>
+      <button class="hero-slider__btn hero-slider__btn--next" type="button" aria-label="次のスライドへ">›</button>
+      <div class="hero-slider__dots" role="tablist" aria-label="スライド選択">
+        <button class="hero-slider__dot is-active" type="button" role="tab" aria-label="スライド 1 へ" aria-selected="true"></button>
+        <button class="hero-slider__dot" type="button" role="tab" aria-label="スライド 2 へ" aria-selected="false"></button>
+        <button class="hero-slider__dot" type="button" role="tab" aria-label="スライド 3 へ" aria-selected="false"></button>
+        <button class="hero-slider__dot" type="button" role="tab" aria-label="スライド 4 へ" aria-selected="false"></button>
+      </div>
+    </div>
 
 
     <!-- 全マップ統合（講座全体像の俯瞰） -->
@@ -5922,6 +6026,98 @@ document.querySelectorAll('.sidebar a').forEach(function(link) {
     if (window.innerWidth <= 900) document.querySelector('.sidebar').classList.remove('open');
   });
 });
+
+// --- Hero Slider (vanilla JS / 依存ゼロ / 自動再生 + 手動切替 + スワイプ + キーボード) ---
+(function initHeroSlider() {
+  var slider = document.getElementById('heroSlider');
+  if (!slider) return;
+  var slides = slider.querySelectorAll('.hero-slider__slide');
+  var dots = slider.querySelectorAll('.hero-slider__dot');
+  var prevBtn = slider.querySelector('.hero-slider__btn--prev');
+  var nextBtn = slider.querySelector('.hero-slider__btn--next');
+  var zoomLink = slider.querySelector('#heroSliderZoom');
+  var total = slides.length;
+  var idx = 0;
+  var autoplayMs = parseInt(slider.dataset.autoplay || '5000', 10);
+  var timer = null;
+  var paused = false;
+
+  function show(i) {
+    idx = (i + total) % total;
+    slides.forEach(function(s, j) {
+      var active = j === idx;
+      s.classList.toggle('is-active', active);
+    });
+    dots.forEach(function(d, j) {
+      var active = j === idx;
+      d.classList.toggle('is-active', active);
+      d.setAttribute('aria-selected', active ? 'true' : 'false');
+    });
+    // 拡大リンクを現在のスライド画像URLに同期
+    if (zoomLink) {
+      var img = slides[idx].querySelector('img');
+      if (img) zoomLink.href = img.getAttribute('src');
+    }
+  }
+
+  function next() { show(idx + 1); }
+  function prev() { show(idx - 1); }
+
+  function startAutoplay() {
+    stopAutoplay();
+    if (autoplayMs > 0 && !paused) {
+      timer = setInterval(next, autoplayMs);
+    }
+  }
+  function stopAutoplay() {
+    if (timer) { clearInterval(timer); timer = null; }
+  }
+
+  // ボタン
+  nextBtn.addEventListener('click', function() { next(); startAutoplay(); });
+  prevBtn.addEventListener('click', function() { prev(); startAutoplay(); });
+
+  // ドット
+  dots.forEach(function(d, j) {
+    d.addEventListener('click', function() { show(j); startAutoplay(); });
+  });
+
+  // ホバー時は一時停止
+  slider.addEventListener('mouseenter', function() { paused = true; stopAutoplay(); });
+  slider.addEventListener('mouseleave', function() { paused = false; startAutoplay(); });
+
+  // キーボード（矢印キー）
+  slider.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowLeft') { prev(); startAutoplay(); }
+    else if (e.key === 'ArrowRight') { next(); startAutoplay(); }
+  });
+  slider.setAttribute('tabindex', '0');
+
+  // スワイプ（モバイル）
+  var touchStartX = null;
+  slider.addEventListener('touchstart', function(e) {
+    touchStartX = e.touches[0].clientX;
+  }, { passive: true });
+  slider.addEventListener('touchend', function(e) {
+    if (touchStartX === null) return;
+    var dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 40) {
+      if (dx < 0) next(); else prev();
+      startAutoplay();
+    }
+    touchStartX = null;
+  });
+
+  // ページ非表示時は止める（省電力）
+  document.addEventListener('visibilitychange', function() {
+    if (document.hidden) stopAutoplay();
+    else startAutoplay();
+  });
+
+  // 起動
+  show(0);
+  startAutoplay();
+})();
 
   </script>
 </body>
